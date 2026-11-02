@@ -1,0 +1,3566 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresh Basket Pakistan — Farm-Fresh Groceries Delivered in 30 Minutes</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065F46',
+              900: '#064E3B',
+            },
+            charcoal: '#1F2937',
+            amber: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1F2937;
+      background-color: #F8FAFC;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Smooth Card & Modal Animations */
+    .product-card {
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.14), 0 8px 16px -6px rgba(15, 23, 42, 0.06);
+    }
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.94) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal-pop {
+      animation: modalPop 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    .animate-float {
+      animation: floatSlow 3.4s infinite ease-in-out;
+    }
+    @keyframes badgeBump {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.28); }
+    }
+    .animate-bump {
+      animation: badgeBump 0.35s ease-out;
+    }
+    .route-line {
+      stroke-dasharray: 8 8;
+      animation: dashMove 1.2s linear infinite;
+    }
+    @keyframes dashMove {
+      to { stroke-dashoffset: -16; }
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #printableReceiptArea, #printableReceiptArea * { visibility: visible; }
+      #printableReceiptArea { position: fixed; left: 0; top: 0; width: 100%; background: white; padding: 24px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-charcoal selection:bg-emerald-500 selection:text-white">
+
+  <!-- ==================== TOP FLASH SALE & PROMO ANNOUNCEMENT BAR ==================== -->
+  <div class="bg-emerald-900 text-white text-xs sm:text-sm py-2 px-4 border-b border-emerald-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="bg-amber-500 text-charcoal font-extrabold px-2.5 py-0.5 rounded-full text-[11px] uppercase tracking-wider flex items-center gap-1">
+          <i class="fa-solid fa-bolt"></i> Express 30m
+        </span>
+        <span>Free Delivery on orders above <strong>Rs. 2,500</strong> across Pakistan!</span>
+      </div>
+
+      <div class="flex items-center gap-3 ml-auto">
+        <!-- Live Flash Sale Countdown -->
+        <div class="hidden lg:flex items-center gap-1.5 bg-emerald-950/70 border border-emerald-700/60 px-2.5 py-0.5 rounded-lg text-xs">
+          <i class="fa-regular fa-clock text-amber-400"></i>
+          <span class="text-emerald-200">Flash Sale Ends in:</span>
+          <span id="flashTimerDisplay" class="font-mono font-bold text-amber-400">04:42:19</span>
+        </div>
+
+        <button
+          onclick="applyOneClickPromo('FRESH20')"
+          class="bg-amber-500 hover:bg-amber-400 text-charcoal font-bold px-3 py-0.5 rounded-lg transition flex items-center gap-1.5 text-xs shadow-xs"
+          title="Click to automatically apply 20% discount"
+        >
+          <i class="fa-solid fa-ticket"></i>
+          <span>Apply Code: FRESH20 (20% OFF)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STICKY TOP NAVIGATION BAR ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-5">
+        
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3 shrink-0 cursor-pointer group" onclick="switchView('storefront')">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">
+            <i class="fa-solid fa-basket-shopping text-xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-charcoal">Fresh<span class="text-emerald-500">Basket</span></span>
+              <span class="hidden sm:inline-block bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md">PK</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium -mt-1 hidden sm:block">Halal Supermart & 30-Min Delivery</p>
+          </div>
+        </div>
+
+        <!-- Interactive Pakistani City / Area Selector -->
+        <button onclick="openLocationModal()" class="hidden xl:flex items-center gap-2.5 bg-slate-100 hover:bg-emerald-50 border border-slate-200/80 hover:border-emerald-300 px-3.5 py-2 rounded-xl transition text-left shrink-0 group">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <div class="text-[11px] text-slate-500 font-medium flex items-center gap-1">
+              <span>Deliver to</span>
+              <span id="navEtaBadge" class="text-emerald-600 font-bold">• 25-30 mins</span>
+            </div>
+            <div class="text-xs font-bold text-charcoal flex items-center gap-1.5 max-w-[185px] truncate">
+              <span id="currentLocationLabel" class="truncate">Wah Cantt - Mall Road</span>
+              <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+            </div>
+          </div>
+        </button>
+
+        <!-- Live Search Bar -->
+        <div class="flex-1 max-w-lg relative">
+          <div class="relative flex items-center">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-slate-400 text-sm pointer-events-none"></i>
+            <input
+              id="globalSearchInput"
+              type="text"
+              oninput="handleSearchInput(this.value)"
+              placeholder="Search Basmati rice, Sindhri mangoes, Olpers milk, Shan masala..."
+              class="w-full pl-10 pr-9 py-2.5 bg-slate-100 focus:bg-white rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15 text-sm outline-none transition"
+            />
+            <button
+              id="clearSearchBtn"
+              onclick="clearSearch()"
+              class="hidden absolute right-3 text-slate-400 hover:text-slate-600 text-sm"
+              title="Clear search"
+            >
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- View Switcher Navigation Tabs (Desktop) -->
+        <nav class="hidden md:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+          <button
+            onclick="switchView('storefront')"
+            id="tab-storefront"
+            class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-emerald-600 shadow-xs"
+          >
+            <i class="fa-solid fa-store"></i>
+            <span>Storefront</span>
+          </button>
+          <button
+            onclick="switchView('tracker')"
+            id="tab-tracker"
+            class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:text-charcoal relative"
+          >
+            <i class="fa-solid fa-motorcycle"></i>
+            <span>Track Order</span>
+            <span id="activeOrderDot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping absolute top-1.5 right-1.5"></span>
+          </button>
+          <button
+            onclick="switchView('admin')"
+            id="tab-admin"
+            class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:text-charcoal"
+          >
+            <i class="fa-solid fa-sliders"></i>
+            <span>Admin</span>
+          </button>
+        </nav>
+
+        <!-- Saved Favorites Filter Pill + Cart Drawer Button -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            onclick="openEmailLogModal()"
+            id="headerEmailLogBtn"
+            class="relative w-10 h-10 sm:w-auto sm:px-3 sm:py-2.5 rounded-xl border border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-700 flex items-center justify-center gap-1.5 transition"
+            title="View Order Email & SMS Logs"
+          >
+            <i class="fa-regular fa-envelope text-emerald-600 text-base"></i>
+            <span id="emailLogCountBadge" class="text-xs font-extrabold text-charcoal">2</span>
+          </button>
+
+          <button
+            onclick="toggleWishlistFilter()"
+            id="headerWishlistBtn"
+            class="relative w-10 h-10 sm:w-auto sm:px-3.5 sm:py-2.5 rounded-xl border border-slate-200 bg-white hover:border-rose-300 hover:bg-rose-50/50 text-slate-700 flex items-center justify-center gap-1.5 transition"
+            title="View Saved Favorites"
+          >
+            <i id="headerWishlistIcon" class="fa-regular fa-heart text-rose-500 text-base"></i>
+            <span id="wishlistCountBadge" class="text-xs font-extrabold text-charcoal">0</span>
+          </button>
+
+          <button
+            onclick="toggleCartDrawer(true)"
+            id="headerCartBtn"
+            class="relative flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white px-3.5 sm:px-4 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-emerald-500/20 transition shrink-0"
+          >
+            <div class="relative">
+              <i class="fa-solid fa-cart-shopping text-base"></i>
+              <span
+                id="cartCountBadge"
+                class="-top-2 -right-2.5 absolute bg-amber-500 text-charcoal font-extrabold text-[11px] min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs"
+              >0</span>
+            </div>
+            <div class="hidden sm:flex flex-col items-start leading-tight text-left">
+              <span class="text-[10px] uppercase tracking-wider text-emerald-100 font-semibold">My Basket</span>
+              <span id="cartTotalBadge" class="text-xs font-extrabold">Rs. 0</span>
+            </div>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Navigation & Location Bar -->
+      <div class="flex md:hidden items-center justify-between py-2 border-t border-slate-100 gap-2 text-xs">
+        <button onclick="openLocationModal()" class="flex items-center gap-1.5 text-slate-600 font-semibold truncate max-w-[52%]">
+          <i class="fa-solid fa-location-dot text-emerald-500"></i>
+          <span id="mobileLocationLabel" class="truncate">Wah Cantt - Mall Road</span>
+          <i class="fa-solid fa-chevron-down text-[10px]"></i>
+        </button>
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+          <button onclick="switchView('storefront')" id="mob-tab-storefront" class="px-2.5 py-1 rounded-md font-bold bg-white text-emerald-600 shadow-xs">Shop</button>
+          <button onclick="switchView('tracker')" id="mob-tab-tracker" class="px-2.5 py-1 rounded-md font-bold text-slate-600">Track</button>
+          <button onclick="switchView('admin')" id="mob-tab-admin" class="px-2.5 py-1 rounded-md font-bold text-slate-600">Admin</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1">
+
+    <!-- ==================== VIEW 1: STOREFRONT ==================== -->
+    <section id="view-storefront" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-10">
+      
+      <!-- Hero Banner Section -->
+      <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-600 text-white shadow-xl">
+        <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-emerald-400/15 blur-2xl pointer-events-none"></div>
+        <div class="absolute left-1/3 -bottom-24 w-72 h-72 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-10 lg:p-12">
+          <!-- Left Column: Copy & CTAs -->
+          <div class="lg:col-span-7 space-y-5">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold text-emerald-100">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              <span>100% Halal Certified • Farm-to-Doorstep Across Pakistan</span>
+            </div>
+            <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-[50px] leading-[1.12] tracking-tight">
+              Farm-Fresh Groceries Delivered in <span class="text-amber-400 underline decoration-amber-400/40 decoration-wavy underline-offset-8">30 Minutes</span>
+            </h1>
+            <p class="text-emerald-100 text-sm sm:text-base max-w-xl leading-relaxed">
+              Click any item to inspect full <strong>Nutrition Facts (%DV)</strong>, <strong>Dietary Badges</strong>, and <strong>Interactive Desi Recipes</strong>. Enjoy Swat apples, Sindhri mangoes, fresh Halal meats, and pantry staples at unbeatable <strong>Rs.</strong> prices.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+              <button
+                onclick="scrollToCatalogAndFilter('all', 'all')"
+                class="bg-amber-500 hover:bg-amber-400 text-charcoal font-display font-extrabold px-6 py-3.5 rounded-2xl shadow-lg shadow-amber-500/25 transition transform hover:-translate-y-0.5 flex items-center gap-2 text-sm sm:text-base"
+              >
+                <span>Shop Supermart</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <button
+                onclick="scrollToBundles()"
+                class="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-5 py-3.5 rounded-2xl backdrop-blur-xs transition flex items-center gap-2 text-sm sm:text-base"
+              >
+                <i class="fa-solid fa-utensils text-amber-400"></i>
+                <span>1-Click Recipe Bundles</span>
+              </button>
+            </div>
+
+            <!-- Trust Badges Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-white/15">
+              <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-3 border border-white/10">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 text-lg">
+                  <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-xs sm:text-sm">Free Delivery &gt; Rs. 2,500</div>
+                  <div class="text-[11px] text-emerald-200">Only Rs. 150 under Rs. 2,500</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-3 border border-white/10">
+                <div class="w-10 h-10 rounded-xl bg-emerald-400/20 text-emerald-300 flex items-center justify-center shrink-0 text-lg">
+                  <i class="fa-solid fa-apple-whole"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-xs sm:text-sm">Nutrition & Recipes</div>
+                  <div class="text-[11px] text-emerald-200">Click any item for macros</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-3 border border-white/10">
+                <div class="w-10 h-10 rounded-xl bg-sky-400/20 text-sky-300 flex items-center justify-center shrink-0 text-lg">
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-xs sm:text-sm">COD, EasyPaisa & JazzCash</div>
+                  <div class="text-[11px] text-emerald-200">Pay at doorstep or mobile</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Interactive Showcase Basket Card -->
+          <div class="lg:col-span-5 flex justify-center">
+            <div class="relative w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-2xl animate-float">
+              <div class="absolute -top-3 -right-3 bg-amber-500 text-charcoal font-display font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                <i class="fa-solid fa-fire"></i>
+                <span>SAVE RS. 360 TODAY</span>
+              </div>
+
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <span class="text-xs uppercase tracking-wider text-emerald-200 font-bold">Monthly Gharana Pack</span>
+                  <h3 class="font-display font-bold text-xl text-white">Desi Kitchen Starter Box</h3>
+                </div>
+                <div class="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shadow-inner">
+                  🥘
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5 mb-5">
+                <div onclick="openProductModal(101)" class="cursor-pointer bg-white/10 hover:bg-white/20 rounded-2xl p-3 flex items-center gap-2.5 border border-white/10 transition">
+                  <span class="text-2xl">🍎</span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">Swat Gala Apples</div>
+                    <div class="text-emerald-200">1 kg • Rs. 360</div>
+                  </div>
+                </div>
+                <div onclick="openProductModal(102)" class="cursor-pointer bg-white/10 hover:bg-white/20 rounded-2xl p-3 flex items-center gap-2.5 border border-white/10 transition">
+                  <span class="text-2xl">🥭</span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">Sindhri Mangoes</div>
+                    <div class="text-emerald-200">1 kg • Rs. 420</div>
+                  </div>
+                </div>
+                <div onclick="openProductModal(104)" class="cursor-pointer bg-white/10 hover:bg-white/20 rounded-2xl p-3 flex items-center gap-2.5 border border-white/10 transition">
+                  <span class="text-2xl">🥛</span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">Olpers Milk 1L</div>
+                    <div class="text-emerald-200">Full Cream • Rs. 310</div>
+                  </div>
+                </div>
+                <div onclick="openProductModal(106)" class="cursor-pointer bg-white/10 hover:bg-white/20 rounded-2xl p-3 flex items-center gap-2.5 border border-white/10 transition">
+                  <span class="text-2xl">🫓</span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">Dawn Parathas</div>
+                    <div class="text-emerald-200">5 Pcs • Rs. 260</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between bg-emerald-950/60 rounded-2xl p-3.5 border border-white/10">
+                <div>
+                  <span class="text-xs text-emerald-200 block">Add all 4 kitchen essentials</span>
+                  <span class="font-display font-extrabold text-lg text-amber-400">Rs. 1,350 Total</span>
+                </div>
+                <button
+                  onclick="addStarterBundle()"
+                  class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-md flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-cart-plus"></i>
+                  <span>Add All 4</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ONE-CLICK DESI RECIPE & FAMILY BUNDLES ==================== -->
+      <div id="recipeBundlesSection" class="scroll-mt-24 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600 block">Curated Chef & Nutrition Combos</span>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-charcoal">One-Click Recipe & Meal Bundles</h2>
+          </div>
+          <p class="text-xs text-slate-500">Add all required ingredients for your favorite Pakistani meal in a single tap</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Bundle 1: Biryani Night -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="bg-amber-100 text-amber-800 text-[11px] font-extrabold px-3 py-1 rounded-full">🍛 Friday Special</span>
+                <span class="text-xs font-bold text-emerald-600">4 Ingredients</span>
+              </div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-3xl shrink-0">🍛</div>
+                <div>
+                  <h3 class="font-display font-extrabold text-lg text-charcoal">Karachi Chicken Biryani Bundle</h3>
+                  <p class="text-xs text-slate-500">Serves 6–8 • High Protein & Aromatic</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100 leading-relaxed">
+                Includes: <strong>Boneless Chicken 1kg</strong> + <strong>Kernel Basmati Rice 5kg</strong> + <strong>Shan Bombay Biryani Masala</strong> + <strong>Fresh Mint & Coriander</strong>.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
+              <div>
+                <span class="text-[11px] text-slate-400 block">Bundle Total</span>
+                <span class="font-display font-extrabold text-lg text-charcoal">Rs. 3,185</span>
+              </div>
+              <button onclick="addCustomBundle('Karachi Chicken Biryani Bundle', [107, 109, 111, 103])" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add Bundle</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bundle 2: Desi Nashta -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-1 rounded-full">☕ Weekend Nashta</span>
+                <span class="text-xs font-bold text-emerald-600">4 Ingredients</span>
+              </div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-3xl shrink-0">🫓</div>
+                <div>
+                  <h3 class="font-display font-extrabold text-lg text-charcoal">Desi Paratha & Karak Chai Box</h3>
+                  <p class="text-xs text-slate-500">Crispy Parathas, Omelette & Doodh Patti</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100 leading-relaxed">
+                Includes: <strong>Dawn Plain Paratha 5pcs</strong> + <strong>Farm Brown Eggs 12pcs</strong> + <strong>Olpers Full Cream Milk 1L</strong> + <strong>Tapal Danedar Tea 900g</strong>.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
+              <div>
+                <span class="text-[11px] text-slate-400 block">Bundle Total</span>
+                <span class="font-display font-extrabold text-lg text-charcoal">Rs. 2,600</span>
+              </div>
+              <button onclick="addCustomBundle('Desi Paratha & Karak Chai Box', [106, 105, 104, 113])" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add Bundle</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bundle 3: Gym & Immunity Protein Box -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="bg-sky-100 text-sky-800 text-[11px] font-extrabold px-3 py-1 rounded-full">💪 Clean Nutrition</span>
+                <span class="text-xs font-bold text-emerald-600">4 Ingredients</span>
+              </div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-3xl shrink-0">🥩</div>
+                <div>
+                  <h3 class="font-display font-extrabold text-lg text-charcoal">High-Protein Fitness Pack</h3>
+                  <p class="text-xs text-slate-500">Lean Protein, Healthy Fats & Antioxidants</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100 leading-relaxed">
+                Includes: <strong>Boneless Chicken Breast 1kg</strong> + <strong>Brown Eggs 12pcs</strong> + <strong>Roasted Pistachios 250g</strong> + <strong>Organic Sidr Honey 500g</strong>.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
+              <div>
+                <span class="text-[11px] text-slate-400 block">Bundle Total</span>
+                <span class="font-display font-extrabold text-lg text-charcoal">Rs. 3,770</span>
+              </div>
+              <button onclick="addCustomBundle('High-Protein Fitness Pack', [107, 105, 115, 116])" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add Bundle</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== CATEGORY & DIETARY FILTER BAR ==================== -->
+      <div id="catalogSection" class="scroll-mt-24 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-charcoal flex items-center gap-2.5">
+              <span>Explore Fresh Groceries</span>
+              <span id="productCountBadge" class="text-xs font-sans font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">16 items</span>
+            </h2>
+            <p class="text-slate-500 text-xs sm:text-sm">Click on any product card to view <strong>Nutrition Facts (%DV)</strong>, <strong>Dietary Tags</strong> & <strong>Recipes</strong></p>
+          </div>
+
+          <!-- Sort Dropdown -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="relative">
+              <select
+                id="sortSelect"
+                onchange="handleSortChange(this.value)"
+                class="appearance-none bg-white border border-slate-200 hover:border-slate-300 rounded-xl pl-3.5 pr-9 py-2.5 text-xs font-bold text-charcoal shadow-xs focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                <option value="featured">Sort: Featured</option>
+                <option value="price-asc">Price: Low to High (Rs.)</option>
+                <option value="price-desc">Price: High to Low (Rs.)</option>
+                <option value="protein">Highest Protein (g)</option>
+                <option value="discount">Biggest Discount</option>
+              </select>
+              <i class="fa-solid fa-sort absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horizontal Category Pills Bar -->
+        <div id="categoryFilterBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 pt-1">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+        <!-- Interactive Dietary & Special Filter Chips -->
+        <div id="dietaryFilterBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+
+      <!-- ==================== PRODUCT GRID ==================== -->
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <!-- Dynamically populated by JS -->
+      </div>
+
+      <!-- Empty Search State -->
+      <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto my-8 shadow-xs">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+          🔍
+        </div>
+        <h3 class="font-display font-bold text-xl text-charcoal mb-1">No matching groceries found</h3>
+        <p class="text-slate-500 text-sm mb-6">Try clearing your search query or switching dietary/category filters.</p>
+        <button onclick="resetCatalogFilters()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-xs">
+          Reset All Filters
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ==================== VIEW 2: LIVE ORDER TRACKER ==================== -->
+    <section id="view-tracker" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      
+      <!-- Tracker Header Bar -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              Live Rider GPS Tracker
+            </span>
+            <select
+              id="orderSelectorDropdown"
+              onchange="selectTrackedOrder(this.value)"
+              class="bg-slate-100 border border-slate-200 text-charcoal font-display font-bold text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+            >
+              <!-- Populated by JS -->
+            </select>
+          </div>
+          <h2 id="trackerOrderHeadline" class="font-display font-extrabold text-2xl sm:text-3xl text-charcoal pt-1">
+            Order #FB-8841 — Packing at Supermart
+          </h2>
+          <p id="trackerSlotLabel" class="text-slate-500 text-sm">
+            Slot: 30-Min Express Delivery • Delivering to Wah Cantt - Mall Road
+          </p>
+        </div>
+
+        <!-- Interactive Simulation Controls -->
+        <div class="flex flex-wrap items-center gap-2.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+          <button
+            onclick="simulateNextOrderStep()"
+            class="bg-amber-500 hover:bg-amber-400 text-charcoal font-display font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-forward-step"></i>
+            <span>Advance Delivery Step</span>
+          </button>
+          <button
+            onclick="openReceiptModal()"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-print"></i>
+            <span>Receipt</span>
+          </button>
+          <button
+            onclick="openEmailLogModal()"
+            class="bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5"
+            title="View Dispatched Order Emails & SMS"
+          >
+            <i class="fa-regular fa-paper-plane"></i>
+            <span>Email Logs</span>
+          </button>
+          <button
+            onclick="resetTrackedOrderStep()"
+            class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs px-3 py-2.5 rounded-xl transition"
+            title="Reset to Step 1"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Visual 4-Step Progress Bar Card -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-8">
+        <div class="relative">
+          <div class="overflow-hidden h-3 rounded-full bg-slate-100">
+            <div
+              id="trackerProgressFill"
+              class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500 rounded-full"
+              style="width: 45%;"
+            ></div>
+          </div>
+
+          <div id="trackerStepNodes" class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+        <!-- Live Simulated Route Map + Rider Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pt-2">
+          <!-- Animated Route Map SVG -->
+          <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-5 text-white relative overflow-hidden flex flex-col justify-between min-h-[260px]">
+            <div class="flex items-center justify-between z-10">
+              <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs">
+                <i class="fa-solid fa-satellite-dish text-emerald-400 animate-pulse"></i>
+                <span id="trackerMapStatusText">Shopper packing chilled dairy & fresh produce...</span>
+              </div>
+              <div class="bg-emerald-500 text-white font-display font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs">
+                ETA: <span id="trackerEtaMinutes">18 mins</span>
+              </div>
+            </div>
+
+            <div class="my-4 relative flex items-center justify-center">
+              <svg viewBox="0 0 600 140" class="w-full h-32 overflow-visible">
+                <rect x="20" y="15" width="90" height="45" rx="8" fill="#1E293B" />
+                <rect x="140" y="10" width="120" height="40" rx="8" fill="#1E293B" />
+                <rect x="300" y="20" width="110" height="45" rx="8" fill="#1E293B" />
+                <rect x="440" y="15" width="130" height="40" rx="8" fill="#1E293B" />
+                <rect x="60" y="85" width="130" height="45" rx="8" fill="#1E293B" />
+                <rect x="230" y="80" width="140" height="45" rx="8" fill="#1E293B" />
+                <rect x="400" y="85" width="120" height="45" rx="8" fill="#1E293B" />
+
+                <path d="M 60 70 Q 190 25, 310 70 T 540 70" fill="none" stroke="#334155" stroke-width="10" stroke-linecap="round" />
+                <path d="M 60 70 Q 190 25, 310 70 T 540 70" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" class="route-line" />
+
+                <g transform="translate(60, 70)">
+                  <circle r="16" fill="#10B981" />
+                  <text text-anchor="middle" dy="5" font-size="14">🏪</text>
+                  <text y="32" text-anchor="middle" fill="#94A3B8" font-size="11" font-weight="bold">Fresh Basket Hub</text>
+                </g>
+
+                <g transform="translate(540, 70)">
+                  <circle r="16" fill="#F59E0B" />
+                  <text text-anchor="middle" dy="5" font-size="14">🏠</text>
+                  <text y="32" text-anchor="middle" fill="#FBBF24" font-size="11" font-weight="bold">Your Doorstep</text>
+                </g>
+
+                <g id="svgRiderPin" transform="translate(185, 48)" class="transition-all duration-700 ease-out">
+                  <circle r="22" fill="#10B981" fill-opacity="0.25" class="animate-ping" />
+                  <circle r="16" fill="#FFFFFF" stroke="#10B981" stroke-width="3" />
+                  <text text-anchor="middle" dy="5" font-size="15">🛵</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-3">
+              <span>Chilled Insulated Box: <strong class="text-emerald-400">Active (4.0°C)</strong></span>
+              <span>100% Halal Verified Dispatch</span>
+            </div>
+          </div>
+
+          <!-- Assigned Rider & Delivery Details -->
+          <div class="lg:col-span-5 flex flex-col justify-between bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Assigned Delivery Rider</span>
+              <div class="flex items-center gap-3.5 mt-2">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-2xl shrink-0">
+                  🛵
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-display font-bold text-base text-charcoal">Bilal Ahmed Khan</h4>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-lg">★ 4.97</span>
+                  </div>
+                  <p class="text-xs text-slate-500">Honda CD-70 Thermal Box • ID Verified</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 text-xs space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Customer:</span>
+                <span id="trackerCustomerName" class="font-bold text-charcoal">Hamza Tariq</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Payment Method:</span>
+                <span id="trackerPaymentBadge" class="font-bold text-emerald-700">Cash on Delivery (COD)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Rider Instructions:</span>
+                <span id="trackerInstructions" class="font-medium text-charcoal italic">"Call on arrival at main gate"</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Quick Rider Instructions</span>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="sendRiderPing('Please don\'t ring the doorbell')" class="text-xs bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 px-3 py-1.5 rounded-xl font-medium transition">
+                  🔕 Don't ring bell
+                </button>
+                <button onclick="sendRiderPing('Hand over to security guard at gate')" class="text-xs bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 px-3 py-1.5 rounded-xl font-medium transition">
+                  👮 Leave at guard gate
+                </button>
+                <button onclick="sendRiderPing('Please bring change for Rs. 5,000')" class="text-xs bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 px-3 py-1.5 rounded-xl font-medium transition">
+                  💵 Bring Rs. 5,000 change
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Itemized Order Receipt Card -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+          <h3 class="font-display font-bold text-lg text-charcoal">Itemized Basket Summary</h3>
+          <span id="trackerTotalAmount" class="font-display font-extrabold text-xl text-emerald-600">Rs. 0</span>
+        </div>
+        <div id="trackerItemsList" class="divide-y divide-slate-100 text-sm">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== VIEW 3: ADMIN & INVENTORY DASHBOARD ==================== -->
+    <section id="view-admin" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
+      <div class="bg-charcoal text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg">
+        <div>
+          <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Store Manager Portal</span>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl mt-2">Fresh Basket — PKR Inventory & Order Command Center</h2>
+          <p class="text-slate-300 text-sm">Add new products in Rs., update stock availability, and dispatch live customer orders.</p>
+        </div>
+        <button
+          onclick="switchView('storefront')"
+          class="bg-white/10 hover:bg-white/20 text-white border border-white/15 px-4 py-2.5 rounded-xl text-xs font-bold transition self-start md:self-auto flex items-center gap-2"
+        >
+          <i class="fa-solid fa-eye"></i>
+          <span>Back to Storefront</span>
+        </button>
+      </div>
+
+      <!-- KPI Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-sack-dollar"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-medium">Total Sales Volume</div>
+            <div id="adminKpiRevenue" class="font-display font-extrabold text-2xl text-charcoal">Rs. 0</div>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-boxes-packing"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-medium">Active Orders</div>
+            <div id="adminKpiOrders" class="font-display font-extrabold text-2xl text-charcoal">0</div>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-medium">Catalog SKU Count</div>
+            <div id="adminKpiProducts" class="font-display font-extrabold text-2xl text-charcoal">16</div>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-medium">Out of Stock Items</div>
+            <div id="adminKpiOutOfStock" class="font-display font-extrabold text-2xl text-charcoal">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Column: Add Product + Order Queue -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-lg text-charcoal">Add New Grocery Item (PKR)</h3>
+                <p class="text-xs text-slate-500">Auto-generates nutrition profile & publishes live</p>
+              </div>
+            </div>
+
+            <form id="adminAddProductForm" onsubmit="handleAdminAddProduct(event)" class="space-y-3.5 text-sm">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Product Title *</label>
+                <input
+                  id="newProdName"
+                  type="text"
+                  required
+                  placeholder="e.g., Multani Sohan Halwa or Chaman Grapes"
+                  class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Category *</label>
+                  <select id="newProdCategory" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none bg-white">
+                    <option value="Fresh Produce">Fresh Produce</option>
+                    <option value="Dairy & Bakery">Dairy & Bakery</option>
+                    <option value="Meat & Seafood">Meat & Seafood</option>
+                    <option value="Pantry & Masala">Pantry & Masala</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Snacks & Dry Fruit">Snacks & Dry Fruit</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Weight / Unit *</label>
+                  <input
+                    id="newProdUnit"
+                    type="text"
+                    required
+                    placeholder="e.g., 1 kg, 500g, 1 Liter"
+                    class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Sale Price (Rs.) *</label>
+                  <input
+                    id="newProdPrice"
+                    type="number"
+                    min="10"
+                    required
+                    placeholder="450"
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Old Price (Rs.)</label>
+                  <input
+                    id="newProdOldPrice"
+                    type="number"
+                    min="0"
+                    placeholder="520"
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Icon</label>
+                  <select id="newProdEmoji" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none bg-white text-base">
+                    <option value="🍎">🍎 Apple</option>
+                    <option value="🥭">🥭 Mango</option>
+                    <option value="🥩">🥩 Meat</option>
+                    <option value="🥛">🥛 Dairy</option>
+                    <option value="🌾">🌾 Grain</option>
+                    <option value="🍯">🍯 Honey</option>
+                    <option value="🍵">🍵 Tea</option>
+                    <option value="🥜">🥜 Dry Fruit</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-display font-bold py-2.5 rounded-xl shadow-md shadow-emerald-500/20 transition flex items-center justify-center gap-2 mt-2"
+              >
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>Publish Product to Storefront</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 class="font-display font-bold text-lg text-charcoal">Order Fulfillment Queue</h3>
+                <p class="text-xs text-slate-500">Dispatch orders & update customer GPS tracker</p>
+              </div>
+              <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">Live Sync</span>
+            </div>
+            <div id="adminOrdersList" class="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Inventory Table -->
+        <div class="lg:col-span-7">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 class="font-display font-bold text-lg text-charcoal">Store Inventory & PKR Price Manager</h3>
+                <p class="text-xs text-slate-500">Edit Rs. prices inline or toggle stock availability</p>
+              </div>
+              <input
+                type="text"
+                oninput="filterAdminInventory(this.value)"
+                placeholder="Filter SKU by name..."
+                class="px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-400 font-bold">
+                    <th class="py-3 px-2">Product</th>
+                    <th class="py-3 px-2">Category</th>
+                    <th class="py-3 px-2">Price (Rs.)</th>
+                    <th class="py-3 px-2">Stock</th>
+                    <th class="py-3 px-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminInventoryTableBody" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== INTERACTIVE PRODUCT DETAIL, NUTRITION FACTS & RECIPES MODAL ==================== -->
+  <div id="productDetailModal" onclick="handleModalBackdropClick(event, 'productDetailModal')" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-5 bg-slate-900/65 backdrop-blur-xs overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-6 animate-modal-pop">
+      <!-- Dynamic Content Injected by JS -->
+      <div id="productDetailModalContent"></div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE-OUT SHOPPING CART DRAWER ==================== -->
+  <div id="cartDrawerBackdrop" onclick="toggleCartDrawer(false)" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300"></div>
+
+  <aside
+    id="cartDrawer"
+    class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-50 shadow-2xl flex flex-col translate-x-full transition-transform duration-300 ease-in-out"
+  >
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+          <i class="fa-solid fa-basket-shopping"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-extrabold text-lg text-charcoal leading-none">Your Fresh Basket</h3>
+          <span id="drawerItemCountText" class="text-xs text-slate-500 font-medium">0 items selected</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          onclick="clearEntireCart()"
+          id="clearCartBtn"
+          class="text-xs text-slate-400 hover:text-rose-600 font-semibold px-2 py-1 rounded-lg transition hidden"
+        >
+          Clear All
+        </button>
+        <button
+          onclick="toggleCartDrawer(false)"
+          class="w-8 h-8 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 flex items-center justify-center transition"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Free Delivery Progress Bar Banner (Rs. 2,500 threshold) -->
+    <div class="bg-emerald-50/80 px-5 py-3 border-b border-emerald-100">
+      <div class="flex items-center justify-between text-xs font-semibold mb-1.5">
+        <span id="freeDeliveryMessage" class="text-emerald-900">Add <strong>Rs. 2,500</strong> more for FREE Delivery!</span>
+        <span id="freeDeliveryPercent" class="text-emerald-700 font-bold">0%</span>
+      </div>
+      <div class="w-full h-2 bg-emerald-200/70 rounded-full overflow-hidden">
+        <div id="freeDeliveryProgressFill" class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Cart Added Items List -->
+    <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-5 divide-y divide-slate-100">
+      <!-- Populated dynamically by JS -->
+    </div>
+
+    <!-- Drawer Footer: Promo Input & Itemized Totals -->
+    <div class="p-5 bg-slate-50 border-t border-slate-200 space-y-4">
+      <div>
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-ticket absolute left-3 top-1/2 -translate-y-1/2 text-amber-500 text-xs"></i>
+            <input
+              id="promoCodeInput"
+              type="text"
+              placeholder="Promo code (FRESH20 or PAK10)"
+              class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold uppercase tracking-wider focus:border-emerald-500 outline-none"
+            />
+          </div>
+          <button
+            onclick="applyPromoCode()"
+            class="bg-charcoal hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0"
+          >
+            Apply
+          </button>
+        </div>
+        <div id="promoAppliedBadge" class="hidden mt-2 flex items-center justify-between bg-emerald-100/80 border border-emerald-300 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">
+          <span id="promoAppliedText"><i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Code <strong>FRESH20</strong> applied</span>
+          <button onclick="removePromoCode()" class="text-emerald-700 hover:text-rose-600 font-bold ml-2">Remove</button>
+        </div>
+      </div>
+
+      <div class="space-y-1.5 text-xs sm:text-sm pt-1">
+        <div class="flex justify-between text-slate-600">
+          <span>Items Subtotal</span>
+          <span id="summarySubtotal" class="font-semibold text-charcoal">Rs. 0</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>Express Delivery Fee</span>
+          <span id="summaryDelivery" class="font-semibold text-charcoal">Rs. 150</span>
+        </div>
+        <div id="summaryDiscountRow" class="hidden flex justify-between text-emerald-600 font-semibold">
+          <span id="summaryDiscountLabel">Promo Discount</span>
+          <span id="summaryDiscount">-Rs. 0</span>
+        </div>
+        <div class="flex justify-between text-base font-display font-extrabold text-charcoal pt-2 border-t border-slate-200">
+          <span>Grand Total</span>
+          <span id="summaryGrandTotal" class="text-emerald-600 text-lg">Rs. 0</span>
+        </div>
+      </div>
+
+      <button
+        onclick="openCheckoutModal()"
+        id="proceedToCheckoutBtn"
+        class="w-full bg-amber-500 hover:bg-amber-400 disabled:bg-slate-300 disabled:text-slate-500 text-charcoal font-display font-extrabold py-3.5 px-5 rounded-2xl shadow-lg shadow-amber-500/20 transition flex items-center justify-between text-sm sm:text-base"
+      >
+        <span>Proceed to Checkout</span>
+        <span class="flex items-center gap-1.5">
+          <span id="checkoutBtnTotal">Rs. 0</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== PAKISTANI DELIVERY SLOT & CHECKOUT MODAL ==================== -->
+  <div id="checkoutModal" onclick="handleModalBackdropClick(event, 'checkoutModal')" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8 animate-modal-pop">
+      
+      <div class="bg-emerald-900 text-white px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-amber-400 text-lg">
+            <i class="fa-solid fa-truck-ramp-box"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-xl">Delivery Slot & PKR Checkout</h3>
+            <p class="text-xs text-emerald-200">100% Halal & Freshness Guarantee • Cold-chain insulated riders</p>
+          </div>
+        </div>
+        <button onclick="closeCheckoutModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="checkoutForm" onsubmit="submitOrderCheckout(event)" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+        
+        <!-- Step 1: Customer & Address Details -->
+        <div class="space-y-3.5">
+          <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-emerald-700">
+            <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[11px]">1</span>
+            <span>Recipient & Pakistani Drop-off Address</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Full Name *</label>
+              <input
+                id="chkName"
+                type="text"
+                required
+                value="Hamza Tariq"
+                placeholder="Enter your full name"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 text-sm outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Mobile / WhatsApp Number *</label>
+              <input
+                id="chkPhone"
+                type="tel"
+                required
+                value="+92 300 5123456"
+                placeholder="+92 3XX XXXXXXX"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 text-sm outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">House / Street / Sector *</label>
+              <input
+                id="chkAddress"
+                type="text"
+                required
+                value="Wah Cantt - Mall Road, House 14-B"
+                placeholder="House #, Street, Sector/Phase"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 text-sm outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Rider Note / Landmark</label>
+              <input
+                id="chkInstructions"
+                type="text"
+                value="Near Askari Park, call on arrival at gate"
+                placeholder="Near mosque, gate color, bell note..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 text-sm outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Delivery Slot Picker -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-emerald-700">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[11px]">2</span>
+              <span>Choose Your Delivery Slot</span>
+            </div>
+            <span class="text-[11px] text-emerald-600 font-semibold">Scheduled 2-Hr Slots are Always FREE!</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="delivery-slot-card cursor-pointer rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 p-3.5 flex items-start gap-3 transition" onclick="selectDeliverySlot(this, '⚡ 30-Min Express Delivery', 'express')">
+              <input type="radio" name="deliverySlot" value="⚡ 30-Min Express Delivery" checked class="mt-1 accent-emerald-600" />
+              <div class="flex-1 text-xs">
+                <div class="flex items-center justify-between font-bold text-charcoal text-sm">
+                  <span>⚡ 30-Min Express</span>
+                  <span class="bg-amber-500 text-charcoal text-[10px] px-2 py-0.5 rounded-full font-extrabold">Rs. 150 / Free &gt; 2.5k</span>
+                </div>
+                <p class="text-slate-500 mt-0.5">Immediate picking & direct bike dispatch</p>
+              </div>
+            </label>
+
+            <label class="delivery-slot-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-start gap-3 transition" onclick="selectDeliverySlot(this, '📅 Today, 4:00 PM – 6:00 PM', 'scheduled')">
+              <input type="radio" name="deliverySlot" value="📅 Today, 4:00 PM – 6:00 PM" class="mt-1 accent-emerald-600" />
+              <div class="flex-1 text-xs">
+                <div class="flex items-center justify-between font-bold text-charcoal text-sm">
+                  <span>🌤️ Today, 4 PM – 6 PM</span>
+                  <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-extrabold">FREE</span>
+                </div>
+                <p class="text-slate-500 mt-0.5">Evening kitchen prep 2-hour slot</p>
+              </div>
+            </label>
+
+            <label class="delivery-slot-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-start gap-3 transition" onclick="selectDeliverySlot(this, '📅 Today, 7:00 PM – 9:00 PM', 'scheduled')">
+              <input type="radio" name="deliverySlot" value="📅 Today, 7:00 PM – 9:00 PM" class="mt-1 accent-emerald-600" />
+              <div class="flex-1 text-xs">
+                <div class="flex items-center justify-between font-bold text-charcoal text-sm">
+                  <span>🌙 Today, 7 PM – 9 PM</span>
+                  <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-extrabold">FREE</span>
+                </div>
+                <p class="text-slate-500 mt-0.5">Dinner & family grocery window</p>
+              </div>
+            </label>
+
+            <label class="delivery-slot-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-start gap-3 transition" onclick="selectDeliverySlot(this, '📅 Tomorrow, 9:00 AM – 11:00 AM', 'scheduled')">
+              <input type="radio" name="deliverySlot" value="📅 Tomorrow, 9 AM – 11 AM" class="mt-1 accent-emerald-600" />
+              <div class="flex-1 text-xs">
+                <div class="flex items-center justify-between font-bold text-charcoal text-sm">
+                  <span>🌅 Tomorrow, 9 AM – 11 AM</span>
+                  <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-extrabold">FREE</span>
+                </div>
+                <p class="text-slate-500 mt-0.5">Fresh morning milk, eggs & parathas</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Step 3: Pakistani Payment Methods -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-emerald-700">
+            <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[11px]">3</span>
+            <span>Select Payment Method</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="payment-method-card cursor-pointer rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 p-3.5 flex items-center gap-3 transition" onclick="selectPaymentMethod(this, 'Cash on Delivery (COD)')">
+              <input type="radio" name="paymentMethod" value="Cash on Delivery (COD)" checked class="accent-emerald-600" />
+              <div class="text-xs">
+                <div class="font-bold text-charcoal text-sm">💵 Cash on Delivery (COD)</div>
+                <div class="text-slate-500">Pay cash in Rs. at your doorstep</div>
+              </div>
+            </label>
+
+            <label class="payment-method-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-center gap-3 transition" onclick="selectPaymentMethod(this, 'EasyPaisa Mobile Wallet')">
+              <input type="radio" name="paymentMethod" value="EasyPaisa Mobile Wallet" class="accent-emerald-600" />
+              <div class="text-xs">
+                <div class="font-bold text-charcoal text-sm">📱 EasyPaisa Mobile Account</div>
+                <div class="text-slate-500">Instant QR / Mobile transfer</div>
+              </div>
+            </label>
+
+            <label class="payment-method-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-center gap-3 transition" onclick="selectPaymentMethod(this, 'JazzCash Mobile Wallet')">
+              <input type="radio" name="paymentMethod" value="JazzCash Mobile Wallet" class="accent-emerald-600" />
+              <div class="text-xs">
+                <div class="font-bold text-charcoal text-sm">📲 JazzCash Mobile Wallet</div>
+                <div class="text-slate-500">Fast MPIN verified payment</div>
+              </div>
+            </label>
+
+            <label class="payment-method-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-center gap-3 transition" onclick="selectPaymentMethod(this, 'Visa / Mastercard / PakPay')">
+              <input type="radio" name="paymentMethod" value="Visa / Mastercard / PakPay" class="accent-emerald-600" />
+              <div class="text-xs">
+                <div class="font-bold text-charcoal text-sm">💳 Debit / Credit Card</div>
+                <div class="text-slate-500">Visa, Mastercard, 1LINK PayPak</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Order Summary Bar & Confirm Button -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="text-xs text-slate-500 block">Total Payable (<span id="chkSummaryCount">0 items</span>)</span>
+            <span id="chkSummaryTotal" class="font-display font-extrabold text-2xl text-emerald-600">Rs. 0</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              onclick="closeCheckoutModal()"
+              class="px-4 py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-600 transition"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              class="bg-emerald-500 hover:bg-emerald-600 text-white font-display font-extrabold px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/25 transition flex items-center gap-2 text-sm"
+            >
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Confirm Order & Track Live</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== PRINTABLE DIGITAL RECEIPT MODAL ==================== -->
+  <div id="receiptModal" onclick="handleModalBackdropClick(event, 'receiptModal')" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-modal-pop">
+      <div id="printableReceiptArea" class="space-y-4">
+        <div class="text-center border-b border-dashed border-slate-300 pb-4">
+          <div class="font-display font-extrabold text-xl text-charcoal">FRESH BASKET SUPERMART PK</div>
+          <p class="text-xs text-slate-500">NTN Verified • 100% Halal Certified Store</p>
+          <p id="receiptOrderMeta" class="text-xs font-mono text-emerald-700 mt-1 font-bold"></p>
+        </div>
+        <div id="receiptCustomerInfo" class="text-xs space-y-1 text-slate-600 border-b border-dashed border-slate-300 pb-3"></div>
+        <div id="receiptItemsTable" class="space-y-2 text-xs"></div>
+        <div id="receiptTotalsBox" class="border-t border-dashed border-slate-300 pt-3 text-sm font-bold flex justify-between text-charcoal"></div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeReceiptModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">Close</button>
+        <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ORDER EMAIL & SMS NOTIFICATION LOG MODAL ==================== -->
+  <div id="emailLogModal" onclick="handleModalBackdropClick(event, 'emailLogModal')" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8 animate-modal-pop">
+      <div class="bg-emerald-900 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-amber-400 text-lg">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-lg sm:text-xl">Order Email & SMS Dispatch Logs</h3>
+            <p class="text-xs text-emerald-200">Automated PKR receipts & real-time delivery alerts sent to customers</p>
+          </div>
+        </div>
+        <button onclick="closeEmailLogModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+          <div class="text-xs text-slate-600">
+            <span class="font-bold text-charcoal">Live Notification Gateway:</span> Active (Transactional Email + SMS)
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              onclick="sendManualOrderUpdateEmail()"
+              class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Send Current Order Alert</span>
+            </button>
+            <button
+              onclick="clearEmailLogs()"
+              class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs px-3 py-2 rounded-xl transition"
+            >
+              Clear Logs
+            </button>
+          </div>
+        </div>
+
+        <div id="emailLogListContainer" class="space-y-3">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAKISTANI LOCATION SELECTOR MODAL ==================== -->
+  <div id="locationModal" onclick="handleModalBackdropClick(event, 'locationModal')" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-modal-pop">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <i class="fa-solid fa-map-pin"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-lg text-charcoal">Select City & Delivery Area</h3>
+            <p class="text-xs text-slate-500">Instant 30-min express hubs across Pakistan</p>
+          </div>
+        </div>
+        <button onclick="closeLocationModal()" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:text-charcoal flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+        <button onclick="setDeliveryLocation('Wah Cantt - Mall Road', '20-25 mins')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between text-left transition">
+          <div>
+            <div class="font-bold text-sm text-charcoal">🏡 Wah Cantt - Mall Road / Lalarukh</div>
+            <div class="text-xs text-slate-500">Wah Fulfillment Center • 1.1 km away</div>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg">20-25 mins</span>
+        </button>
+        <button onclick="setDeliveryLocation('Islamabad - F-7 / Blue Area', '25-30 mins')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between text-left transition">
+          <div>
+            <div class="font-bold text-sm text-charcoal">🌲 Islamabad - F-7 / Blue Area</div>
+            <div class="text-xs text-slate-500">Capital Hub • 1.8 km away</div>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg">25-30 mins</span>
+        </button>
+        <button onclick="setDeliveryLocation('Rawalpindi - Bahria Town', '25-30 mins')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between text-left transition">
+          <div>
+            <div class="font-bold text-sm text-charcoal">🏛️ Rawalpindi - Bahria Town Ph 1-7</div>
+            <div class="text-xs text-slate-500">GT Road Dark Store • 1.5 km away</div>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg">25-30 mins</span>
+        </button>
+        <button onclick="setDeliveryLocation('Lahore - Gulberg / DHA', '25-35 mins')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between text-left transition">
+          <div>
+            <div class="font-bold text-sm text-charcoal">🕌 Lahore - Gulberg / DHA Phase 5</div>
+            <div class="text-xs text-slate-500">Main Boulevard Hub • 2.2 km away</div>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg">25-35 mins</span>
+        </button>
+        <button onclick="setDeliveryLocation('Karachi - Clifton / DHA', '30-35 mins')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between text-left transition">
+          <div>
+            <div class="font-bold text-sm text-charcoal">🌊 Karachi - Clifton / Sea View</div>
+            <div class="text-xs text-slate-500">South Express Hub • 2.5 km away</div>
+          </div>
+          <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">30-35 mins</span>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100">
+        <label class="block text-xs font-bold text-slate-600 mb-1.5">Or Enter Custom Pakistani Sector / Address</label>
+        <div class="flex gap-2">
+          <input
+            id="customLocationInput"
+            type="text"
+            placeholder="e.g., G-11 Markaz, Islamabad"
+            class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-emerald-500"
+          />
+          <button
+            onclick="saveCustomLocation()"
+            class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
+          <i class="fa-solid fa-basket-shopping"></i>
+        </div>
+        <span class="font-display font-extrabold text-base text-charcoal">Fresh<span class="text-emerald-500">Basket</span> Pakistan</span>
+        <span>• 30-Min Express Halal Supermart</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <button onclick="switchView('storefront')" class="hover:text-emerald-600 font-semibold">Storefront</button>
+        <button onclick="switchView('tracker')" class="hover:text-emerald-600 font-semibold">Live Order Tracker</button>
+        <button onclick="switchView('admin')" class="hover:text-emerald-600 font-semibold">Admin Dashboard</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== APPLICATION JAVASCRIPT ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. PKR CURRENCY FORMATTER & CONSTANTS
+     *************************************************************************/
+    const FREE_DELIVERY_THRESHOLD = 2500;
+    const STANDARD_DELIVERY_FEE = 150;
+
+    function formatPKR(amount) {
+      return 'Rs. ' + Math.round(Number(amount) || 0).toLocaleString('en-PK');
+    }
+
+    const CATEGORIES = [
+      { id: 'all', name: 'All Groceries', icon: '🧺' },
+      { id: 'Fresh Produce', name: 'Fresh Produce', icon: '🥭' },
+      { id: 'Dairy & Bakery', name: 'Dairy & Bakery', icon: '🥛' },
+      { id: 'Meat & Seafood', name: 'Meat & Seafood', icon: '🥩' },
+      { id: 'Pantry & Masala', name: 'Pantry & Masala', icon: '🌾' },
+      { id: 'Beverages', name: 'Beverages', icon: '🍵' },
+      { id: 'Snacks & Dry Fruit', name: 'Snacks & Dry Fruit', icon: '🥜' }
+    ];
+
+    const DIETARY_FILTERS = [
+      { id: 'all', label: 'All Items', icon: 'fa-layer-group' },
+      { id: 'sale', label: 'On Sale', icon: 'fa-tag' },
+      { id: '100% Halal', label: '100% Halal', icon: 'fa-moon' },
+      { id: 'High Protein', label: 'High Protein', icon: 'fa-dumbbell' },
+      { id: 'Farm Organic', label: 'Farm Organic', icon: 'fa-leaf' },
+      { id: 'Gluten-Free', label: 'Gluten-Free', icon: 'fa-wheat-awn-circle-exclamation' },
+      { id: 'favorites', label: 'Saved Favorites', icon: 'fa-heart' }
+    ];
+
+    /*************************************************************************
+     * 2. REALISTIC PAKISTANI GROCERY CATALOG WITH NUTRITION & RECIPES
+     *************************************************************************/
+    let products = [
+      {
+        id: 101,
+        name: 'Swat Gala Apples',
+        category: 'Fresh Produce',
+        unit: '1 kg (6–7 Crisp Apples)',
+        price: 360,
+        oldPrice: 420,
+        emoji: '🍎',
+        bgGradient: 'from-rose-50 to-red-100',
+        badge: 'Swat Orchard',
+        origin: 'Upper Swat Valley, KPK',
+        storage: 'Keep in crisper drawer at 4°C for up to 2 weeks.',
+        inStock: true,
+        dietary: ['Farm Organic', 'Gluten-Free', 'Heart Healthy'],
+        nutrition: { servingSize: '100g', calories: 52, protein: 0.3, carbs: 14, fat: 0.2, fiber: 2.4 },
+        recipes: [
+          {
+            title: 'Swat Apple & Honey Cinnamon Crunch Bowl',
+            prepTime: '5 mins',
+            servings: '2 Servings',
+            steps: 'Dice crisp Swat Gala apples, drizzle warm Organic Sidr Honey, and top with crushed Roasted Salted Pistachios.',
+            ingredientIds: [101, 116, 115]
+          }
+        ]
+      },
+      {
+        id: 102,
+        name: 'Sindhri Sweet Mangoes',
+        category: 'Fresh Produce',
+        unit: '1 kg Export Grade Box',
+        price: 420,
+        oldPrice: 500,
+        emoji: '🥭',
+        bgGradient: 'from-amber-50 to-yellow-100',
+        badge: 'King of Mangoes',
+        origin: 'Mirpurkhas Orchards, Sindh',
+        storage: 'Ripen at room temperature; chill 2 hours before slicing.',
+        inStock: true,
+        dietary: ['Farm Organic', 'Gluten-Free', 'No Preservatives'],
+        nutrition: { servingSize: '100g', calories: 60, protein: 0.8, carbs: 15, fat: 0.4, fiber: 1.6 },
+        recipes: [
+          {
+            title: 'Chilled Sindhri Mango Doodh Lassi',
+            prepTime: '7 mins',
+            servings: '3 Glasses',
+            steps: 'Blend sweet Sindhri mango cubes with chilled Olpers Full Cream Milk, a spoon of Sidr Honey, and crushed ice.',
+            ingredientIds: [102, 104, 116]
+          }
+        ]
+      },
+      {
+        id: 103,
+        name: 'Fresh Mint & Coriander Bundle',
+        category: 'Fresh Produce',
+        unit: '2 Washed Gaddi Bunches',
+        price: 45,
+        oldPrice: 60,
+        emoji: '🌿',
+        bgGradient: 'from-emerald-50 to-green-100',
+        badge: 'Daily Harvest',
+        origin: 'Local Hydroponic Farm, Islamabad',
+        storage: 'Wrap stems in damp paper towel inside refrigerator.',
+        inStock: true,
+        dietary: ['Farm Organic', 'Gluten-Free', 'Keto Friendly'],
+        nutrition: { servingSize: '50g', calories: 18, protein: 1.4, carbs: 3.1, fat: 0.3, fiber: 2.1 },
+        recipes: [
+          {
+            title: 'Dhaba-Style Green Mint Raita & Chutney',
+            prepTime: '5 mins',
+            servings: '4 Servings',
+            steps: 'Grind fresh mint and coriander leaves with green chili, cumin, and salt. Fold into chilled yogurt or serve alongside Biryani.',
+            ingredientIds: [103, 111, 109]
+          }
+        ]
+      },
+      {
+        id: 104,
+        name: 'Olpers Full Cream Milk',
+        category: 'Dairy & Bakery',
+        unit: '1 Liter Tetra Pak',
+        price: 310,
+        oldPrice: 340,
+        emoji: '🥛',
+        bgGradient: 'from-red-50 to-sky-100',
+        badge: '100% Pure Dairy',
+        origin: 'Engro Foods Dairy Farms, Sahiwal',
+        storage: 'Store in a cool dry place. Refrigerate after opening & consume within 4 days.',
+        inStock: true,
+        dietary: ['100% Halal', 'High Protein', 'Gluten-Free'],
+        nutrition: { servingSize: '250ml Glass', calories: 155, protein: 8.2, carbs: 11.8, fat: 8.5, fiber: 0 },
+        recipes: [
+          {
+            title: 'Karak Cardamom Doodh Patti Chai',
+            prepTime: '10 mins',
+            servings: '4 Cups',
+            steps: 'Simmer Olpers Full Cream Milk with 2 tsp Tapal Danedar Black Tea and crushed green cardamom until rich and creamy.',
+            ingredientIds: [104, 113, 106]
+          }
+        ]
+      },
+      {
+        id: 105,
+        name: 'Farm Fresh Brown Eggs',
+        category: 'Dairy & Bakery',
+        unit: '12 Large Eggs (1 Dozen)',
+        price: 380,
+        oldPrice: 430,
+        emoji: '🥚',
+        bgGradient: 'from-amber-50 to-orange-100',
+        badge: 'Omega-3 Rich',
+        origin: 'Chakwal Free-Range Poultry Farms',
+        storage: 'Keep refrigerated in original carton.',
+        inStock: true,
+        dietary: ['100% Halal', 'High Protein', 'Keto Friendly', 'Gluten-Free'],
+        nutrition: { servingSize: '2 Large Eggs (100g)', calories: 143, protein: 12.6, carbs: 0.7, fat: 9.5, fiber: 0 },
+        recipes: [
+          {
+            title: 'Desi Hara Masala Omelette & Crispy Paratha',
+            prepTime: '8 mins',
+            servings: '2 Servings',
+            steps: 'Whisk 3 Brown Eggs with finely chopped Mint & Coriander. Fry in a little Sufi Canola Oil and wrap inside a hot Dawn Paratha.',
+            ingredientIds: [105, 106, 103, 112]
+          }
+        ]
+      },
+      {
+        id: 106,
+        name: 'Dawn Plain Paratha',
+        category: 'Dairy & Bakery',
+        unit: '5 Pcs Family Pack (400g)',
+        price: 260,
+        oldPrice: 300,
+        emoji: '🫓',
+        bgGradient: 'from-orange-50 to-amber-100',
+        badge: 'Flaky & Crispy',
+        origin: 'Dawn Bread Bakery, Lahore',
+        storage: 'Keep frozen at -18°C. Place directly on hot tawa without thawing.',
+        inStock: true,
+        dietary: ['100% Halal', 'No Preservatives'],
+        nutrition: { servingSize: '1 Paratha (80g)', calories: 250, protein: 5.4, carbs: 34, fat: 10.2, fiber: 2.0 },
+        recipes: [
+          {
+            title: 'Chai Paratha & Fried Egg Nashta',
+            prepTime: '6 mins',
+            servings: '2 Servings',
+            steps: 'Toast Dawn Paratha on a hot tawa until golden brown and flaky. Serve with sunny-side-up Brown Eggs and hot Tapal Chai.',
+            ingredientIds: [106, 105, 113, 104]
+          }
+        ]
+      },
+      {
+        id: 107,
+        name: 'Fresh Boneless Chicken Breast',
+        category: 'Meat & Seafood',
+        unit: '1 kg Vacuum Chilled Tray',
+        price: 1150,
+        oldPrice: 1290,
+        emoji: '🍗',
+        bgGradient: 'from-rose-50 to-orange-100',
+        badge: '100% Halal Hand-Slaughtered',
+        origin: 'ISO-Certified Halal Slaughterhouse, Rawalpindi',
+        storage: 'Keep chilled at 0–4°C or freeze immediately.',
+        inStock: true,
+        dietary: ['100% Halal', 'High Protein', 'Keto Friendly', 'Gluten-Free'],
+        nutrition: { servingSize: '100g Raw', calories: 165, protein: 31.0, carbs: 0, fat: 3.6, fiber: 0 },
+        recipes: [
+          {
+            title: 'Karachi Special Chicken Dum Biryani',
+            prepTime: '40 mins',
+            servings: '6 Servings',
+            steps: 'Marinate Boneless Chicken in Shan Bombay Biryani Masala and yogurt. Layer with parboiled Kernel Basmati Rice and fresh Mint & Coriander for 15-min dum.',
+            ingredientIds: [107, 109, 111, 103]
+          }
+        ]
+      },
+      {
+        id: 108,
+        name: 'Prime Mutton Chops (Putth & Champ)',
+        category: 'Meat & Seafood',
+        unit: '1 kg Fresh Butcher Cut',
+        price: 2250,
+        oldPrice: 2490,
+        emoji: '🥩',
+        bgGradient: 'from-red-50 to-rose-100',
+        badge: 'Pasture Raised',
+        origin: 'Sargodha Pasture Farms, Punjab',
+        storage: 'Store at 0–2°C or freeze in airtight bags.',
+        inStock: true,
+        dietary: ['100% Halal', 'High Protein', 'Keto Friendly', 'Gluten-Free'],
+        nutrition: { servingSize: '100g Cut', calories: 235, protein: 25.5, carbs: 0, fat: 14.2, fiber: 0 },
+        recipes: [
+          {
+            title: 'Peshawari Namkeen Mutton Champ Karahi',
+            prepTime: '45 mins',
+            servings: '5 Servings',
+            steps: 'Seared Prime Mutton Chops slow-cooked in Sufi Canola Oil with tomatoes, ginger, black pepper, and garnished with fresh coriander.',
+            ingredientIds: [108, 112, 103]
+          }
+        ]
+      },
+      {
+        id: 109,
+        name: 'Kernel Super Basmati Rice',
+        category: 'Pantry & Masala',
+        unit: '5 kg Woven Fabric Bag',
+        price: 1850,
+        oldPrice: 2150,
+        emoji: '🍚',
+        bgGradient: 'from-amber-50 to-stone-100',
+        badge: '2-Year Aged Extra Long',
+        origin: 'Hafizabad & Gujranwala Rice Belt, Punjab',
+        storage: 'Keep in an airtight container away from moisture.',
+        inStock: true,
+        dietary: ['100% Halal', 'Gluten-Free', 'Farm Organic'],
+        nutrition: { servingSize: '100g Dry Rice', calories: 350, protein: 7.5, carbs: 78, fat: 0.6, fiber: 1.4 },
+        recipes: [
+          {
+            title: 'Aromatic Shahi Chicken Pulao & Biryani',
+            prepTime: '35 mins',
+            servings: '8 Servings',
+            steps: 'Soak aged Kernel Super Basmati Rice for 30 mins. Cook with tender Chicken, Shan Biryani Masala, and whole spices for extra-long separate grains.',
+            ingredientIds: [109, 107, 111, 112]
+          }
+        ]
+      },
+      {
+        id: 110,
+        name: 'Chakki Whole Wheat Atta',
+        category: 'Pantry & Masala',
+        unit: '10 kg Family Sack',
+        price: 1450,
+        oldPrice: 1620,
+        emoji: '🌾',
+        bgGradient: 'from-yellow-50 to-amber-100',
+        badge: '100% Stone Ground',
+        origin: 'Golden Wheat Fields, Bahawalpur',
+        storage: 'Store in cool dry bin. High natural bran fiber.',
+        inStock: true,
+        dietary: ['100% Halal', 'Farm Organic', 'Heart Healthy'],
+        nutrition: { servingSize: '100g Flour', calories: 340, protein: 12.2, carbs: 71, fat: 1.9, fiber: 10.7 },
+        recipes: [
+          {
+            title: 'Soft Homemade Whole-Wheat Phulka Roti',
+            prepTime: '15 mins',
+            servings: '10 Rotis',
+            steps: 'Knead Chakki Atta with warm water and a drop of Sufi Canola Oil. Rest 15 mins and cook puffed phulkas over open flame.',
+            ingredientIds: [110, 112]
+          }
+        ]
+      },
+      {
+        id: 111,
+        name: 'Shan Special Bombay Biryani Masala',
+        category: 'Pantry & Masala',
+        unit: '60g Foil-Sealed Box',
+        price: 140,
+        oldPrice: 165,
+        emoji: '🌶️',
+        bgGradient: 'from-red-50 to-orange-100',
+        badge: 'Authentic Spice Blend',
+        origin: 'Shan Foods, Karachi',
+        storage: 'Keep sealed in a dry spice cabinet.',
+        inStock: true,
+        dietary: ['100% Halal', 'No Preservatives', 'Gluten-Free'],
+        nutrition: { servingSize: '15g Spice Mix', calories: 45, protein: 1.5, carbs: 7.0, fat: 1.2, fiber: 2.5 },
+        recipes: [
+          {
+            title: '1-Pot Spicy Bombay Chicken Biryani',
+            prepTime: '35 mins',
+            servings: '6 Servings',
+            steps: 'Sauté chicken in Sufi Canola Oil, add Shan Bombay Biryani Masala, layer with Kernel Basmati Rice and fresh Mint.',
+            ingredientIds: [111, 107, 109, 103]
+          }
+        ]
+      },
+      {
+        id: 112,
+        name: 'Sufi Canola Cooking Oil',
+        category: 'Pantry & Masala',
+        unit: '3 Liter Value Box',
+        price: 1580,
+        oldPrice: 1750,
+        emoji: '🫗',
+        bgGradient: 'from-yellow-50 to-lime-100',
+        badge: 'Omega 3 & 6 Enriched',
+        origin: 'Sufi Group Refineries, Lahore',
+        storage: 'Store away from direct sunlight.',
+        inStock: true,
+        dietary: ['100% Halal', 'Heart Healthy', 'Gluten-Free', 'Keto Friendly'],
+        nutrition: { servingSize: '1 Tbsp (14g)', calories: 120, protein: 0, carbs: 0, fat: 14.0, fiber: 0 },
+        recipes: [
+          {
+            title: 'Light & Crispy Chicken Fry & Tarka',
+            prepTime: '20 mins',
+            servings: '4 Servings',
+            steps: 'Ideal zero-cholesterol cooking oil for daily handi, crispy parathas, and golden biryani onion tarka.',
+            ingredientIds: [112, 107, 106]
+          }
+        ]
+      },
+      {
+        id: 113,
+        name: 'Tapal Danedar Black Tea',
+        category: 'Beverages',
+        unit: '900g Family Jar Pack',
+        price: 1650,
+        oldPrice: 1850,
+        emoji: '🍵',
+        bgGradient: 'from-red-50 to-amber-100',
+        badge: 'Pakistan #1 Tea',
+        origin: 'High-Grown Kenyan & Assam Tea Gardens',
+        storage: 'Store in an airtight jar to lock in aroma.',
+        inStock: true,
+        dietary: ['100% Halal', 'Gluten-Free', 'No Preservatives'],
+        nutrition: { servingSize: '1 Cup Brewed (2g)', calories: 2, protein: 0.1, carbs: 0.4, fat: 0, fiber: 0 },
+        recipes: [
+          {
+            title: 'Dhaba-Style Malai Doodh Patti Chai',
+            prepTime: '8 mins',
+            servings: '4 Cups',
+            steps: 'Boil Olpers Full Cream Milk with Tapal Danedar granules, aerate with a ladle (phenta), and sweeten to taste.',
+            ingredientIds: [113, 104, 106]
+          }
+        ]
+      },
+      {
+        id: 114,
+        name: 'Rooh Afza Refreshing Sharbat',
+        category: 'Beverages',
+        unit: '800 ml Bottle',
+        price: 520,
+        oldPrice: 580,
+        emoji: '🌹',
+        bgGradient: 'from-rose-50 to-pink-100',
+        badge: 'Hamdard Herbal',
+        origin: 'Hamdard Laboratories, Pakistan',
+        storage: 'Store at room temperature; no refrigeration needed.',
+        inStock: true,
+        dietary: ['100% Halal', 'Gluten-Free'],
+        nutrition: { servingSize: '30ml Syrup', calories: 95, protein: 0, carbs: 24, fat: 0, fiber: 0 },
+        recipes: [
+          {
+            title: 'Chilled Rose Doodh Soda / Mohabbat Ka Sharbat',
+            prepTime: '4 mins',
+            servings: '4 Glasses',
+            steps: 'Stir 3 tbsp Rooh Afza into ice-cold Olpers Full Cream Milk and top with chopped pistachios.',
+            ingredientIds: [114, 104, 115]
+          }
+        ]
+      },
+      {
+        id: 115,
+        name: 'Roasted Salted Pistachios',
+        category: 'Snacks & Dry Fruit',
+        unit: '250g Resealable Zip Pouch',
+        price: 950,
+        oldPrice: 1120,
+        emoji: '🥜',
+        bgGradient: 'from-lime-50 to-emerald-100',
+        badge: 'Quetta Premium',
+        origin: 'Quetta Dry Fruit Market, Balochistan',
+        storage: 'Reseal zip pouch tightly after opening.',
+        inStock: true,
+        dietary: ['100% Halal', 'High Protein', 'Heart Healthy', 'Keto Friendly', 'Gluten-Free'],
+        nutrition: { servingSize: '50g Handful', calories: 280, protein: 10.2, carbs: 14, fat: 22.5, fiber: 5.1 },
+        recipes: [
+          {
+            title: 'Royal Honey & Pistachio Energy Trail Mix',
+            prepTime: '3 mins',
+            servings: '4 Servings',
+            steps: 'Shell roasted Quetta pistachios, toss with diced Swat Apples and drizzle with pure Sidr Honey.',
+            ingredientIds: [115, 116, 101]
+          }
+        ]
+      },
+      {
+        id: 116,
+        name: 'Organic Sidr Berry Honey (Beri)',
+        category: 'Snacks & Dry Fruit',
+        unit: '500g Glass Jar',
+        price: 1290,
+        oldPrice: 1490,
+        emoji: '🍯',
+        bgGradient: 'from-amber-50 to-yellow-100',
+        badge: '100% Raw Unfiltered',
+        origin: 'Karak & Potohar Wild Sidr Forests',
+        storage: 'Store at room temperature. Never refrigerate pure honey.',
+        inStock: true,
+        dietary: ['100% Halal', 'Farm Organic', 'Gluten-Free', 'No Preservatives'],
+        nutrition: { servingSize: '1 Tbsp (21g)', calories: 64, protein: 0.1, carbs: 17, fat: 0, fiber: 0 },
+        recipes: [
+          {
+            title: 'Morning Sunnah Immunity Booster Drink',
+            prepTime: '2 mins',
+            servings: '1 Glass',
+            steps: 'Dissolve 1 tbsp Raw Sidr Honey in lukewarm water or drizzle over hot Dawn Parathas and pistachios.',
+            ingredientIds: [116, 115, 106]
+          }
+        ]
+      }
+    ];
+
+    /*************************************************************************
+     * 3. STATE: CART, FAVORITES, FILTERS, ORDERS & PROMOS
+     *************************************************************************/
+    let cart = {
+      101: 1,
+      104: 2,
+      107: 1
+    };
+
+    let wishlist = new Set([102, 107, 109]);
+    let activeCategory = 'all';
+    let activeDietary = 'all';
+    let searchQuery = '';
+    let sortBy = 'featured';
+    let appliedPromo = null; // 'FRESH20' (20%) or 'PAK10' (10%)
+    let currentDeliveryLocation = 'Wah Cantt - Mall Road';
+    let currentLocationEta = '20-25 mins';
+    let selectedSlotValue = '⚡ 30-Min Express Delivery';
+    let selectedSlotType = 'express'; // 'express' or 'scheduled'
+    let selectedPaymentValue = 'Cash on Delivery (COD)';
+
+    const ORDER_STEPS = [
+      {
+        index: 0,
+        title: 'Order Placed',
+        subtitle: 'Received at store terminal',
+        icon: 'fa-receipt',
+        eta: '26 mins',
+        mapText: 'Order verified at Fresh Basket Fulfillment Center...',
+        pinCoords: 'translate(60, 70)'
+      },
+      {
+        index: 1,
+        title: 'Packing at Supermart',
+        subtitle: 'Checking freshness & Halal tags',
+        icon: 'fa-box-open',
+        eta: '18 mins',
+        mapText: 'Shopper packing chilled dairy & fresh produce in Aisle 3...',
+        pinCoords: 'translate(185, 48)'
+      },
+      {
+        index: 2,
+        title: 'Rider En Route',
+        subtitle: 'Bilal Ahmed is on the way',
+        icon: 'fa-motorcycle',
+        eta: '7 mins',
+        mapText: 'Rider Bilal Ahmed is 0.8 km away on Mall Road...',
+        pinCoords: 'translate(380, 74)'
+      },
+      {
+        index: 3,
+        title: 'Delivered',
+        subtitle: 'Handed over at doorstep',
+        icon: 'fa-house-circle-check',
+        eta: 'Arrived!',
+        mapText: 'Order delivered inside insulated bags at your doorstep!',
+        pinCoords: 'translate(540, 70)'
+      }
+    ];
+
+    let orders = [
+      {
+        id: 'FB-8841',
+        customerName: 'Hamza Tariq',
+        phone: '+92 300 5123456',
+        address: 'Wah Cantt - Mall Road, House 14-B',
+        instructions: 'Near Askari Park, call on arrival at gate',
+        slot: '⚡ 30-Min Express Delivery',
+        paymentMethod: 'Cash on Delivery (COD)',
+        statusIndex: 1,
+        createdAt: 'Today, 3:15 PM',
+        total: 3140,
+        items: [
+          { name: 'Fresh Boneless Chicken Breast', unit: '1 kg Vacuum Chilled Tray', qty: 1, price: 1150, emoji: '🍗' },
+          { name: 'Kernel Super Basmati Rice', unit: '5 kg Woven Fabric Bag', qty: 1, price: 1850, emoji: '🍚' },
+          { name: 'Shan Special Bombay Biryani Masala', unit: '60g Foil-Sealed Box', qty: 1, price: 140, emoji: '🌶️' }
+        ]
+      }
+    ];
+    let selectedOrderId = 'FB-8841';
+
+    let emailLogs = [
+      {
+        id: 'LOG-902',
+        orderId: 'FB-8841',
+        recipient: 'Hamza Tariq (+92 300 5123456 • hamza.tariq@email.pk)',
+        channel: 'Email & SMS',
+        subject: 'Order #FB-8841 Update: Packing at Supermart',
+        body: 'Assalam-o-Alaikum Hamza! Your Fresh Basket order #FB-8841 (Rs. 3,140) is currently being packed in chilled insulated bags at our Wah Cantt Fulfillment Hub.',
+        timestamp: 'Today, 3:18 PM'
+      },
+      {
+        id: 'LOG-901',
+        orderId: 'FB-8841',
+        recipient: 'Hamza Tariq (+92 300 5123456 • hamza.tariq@email.pk)',
+        channel: 'Email Receipt',
+        subject: 'Order Confirmed #FB-8841 — Rs. 3,140 (COD)',
+        body: 'Thank you for shopping with Fresh Basket Pakistan! We have received your order of 3 Halal-verified items scheduled for 30-Min Express Delivery.',
+        timestamp: 'Today, 3:15 PM'
+      }
+    ];
+
+    /*************************************************************************
+     * 3B. ORDER EMAIL & SMS NOTIFICATION LOG MODAL FUNCTIONS
+     *************************************************************************/
+    function updateEmailLogBadge() {
+      const badge = document.getElementById('emailLogCountBadge');
+      if (badge) badge.textContent = emailLogs.length;
+    }
+
+    function logOrderEmailEvent(order, subject, body, channel = 'Email & SMS') {
+      if (!order) return;
+      const slug = (order.customerName || 'customer').toLowerCase().replace(/[^a-z0-9]/g, '.');
+      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      emailLogs.unshift({
+        id: 'LOG-' + Math.floor(100 + Math.random() * 900),
+        orderId: order.id,
+        recipient: `${order.customerName} (${order.phone} • ${slug}@email.pk)`,
+        channel,
+        subject,
+        body,
+        timestamp: `Today, ${nowStr}`
+      });
+      updateEmailLogBadge();
+      renderEmailLogList();
+    }
+
+    function renderEmailLogList() {
+      const container = document.getElementById('emailLogListContainer');
+      if (!container) return;
+
+      if (emailLogs.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 text-slate-400 text-xs">
+            <i class="fa-regular fa-envelope-open text-3xl mb-2 block"></i>
+            No email or SMS notifications logged yet. Place an order or click "Send Current Order Alert".
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = emailLogs.map(log => `
+        <div class="p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 transition space-y-2 shadow-2xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+                ${log.channel}
+              </span>
+              <span class="text-xs font-mono font-bold text-slate-500">#${log.orderId}</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-medium">${log.timestamp}</span>
+          </div>
+          <h4 class="font-display font-bold text-sm text-charcoal">${log.subject}</h4>
+          <div class="text-[11px] text-slate-500">
+            <strong>To:</strong> ${log.recipient}
+          </div>
+          <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 leading-relaxed">
+            ${log.body}
+          </p>
+        </div>
+      `).join('');
+    }
+
+    function openEmailLogModal() {
+      renderEmailLogList();
+      const modal = document.getElementById('emailLogModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeEmailLogModal() {
+      const modal = document.getElementById('emailLogModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function sendManualOrderUpdateEmail() {
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (!order) {
+        showToast('No active order found to send notification', 'warning');
+        return;
+      }
+      const step = ORDER_STEPS[order.statusIndex];
+      logOrderEmailEvent(
+        order,
+        `Order #${order.id} Status Alert: ${step.title}`,
+        `Hello ${order.customerName}, your Fresh Basket order #${order.id} (${formatPKR(order.total)}) is currently at stage "${step.title}" (${step.mapText}). Estimated arrival: ${step.eta}.`
+      );
+      showToast(`Dispatched Email & SMS alert for Order #${order.id}`, 'success');
+    }
+
+    function clearEmailLogs() {
+      emailLogs = [];
+      updateEmailLogBadge();
+      renderEmailLogList();
+      showToast('Cleared email & SMS notification logs', 'info');
+    }
+
+    // Expose modal handlers globally on window to prevent any inline onclick ReferenceErrors
+    window.openEmailLogModal = openEmailLogModal;
+    window.closeEmailLogModal = closeEmailLogModal;
+
+    /*************************************************************************
+     * 4. VIEW SWITCHING & NAVIGATION
+     *************************************************************************/
+    function switchView(viewName) {
+      const views = ['storefront', 'tracker', 'admin'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.toggle('hidden', v !== viewName);
+
+        const tab = document.getElementById(`tab-${v}`);
+        if (tab) {
+          tab.className = v === viewName
+            ? 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-emerald-600 shadow-xs'
+            : 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:text-charcoal relative';
+        }
+
+        const mobTab = document.getElementById(`mob-tab-${v}`);
+        if (mobTab) {
+          mobTab.className = v === viewName
+            ? 'px-2.5 py-1 rounded-md font-bold bg-white text-emerald-600 shadow-xs'
+            : 'px-2.5 py-1 rounded-md font-bold text-slate-600';
+        }
+      });
+
+      if (viewName === 'storefront') {
+        renderCategoryPills();
+        renderDietaryPills();
+        renderProductGrid();
+      } else if (viewName === 'tracker') {
+        renderOrderTrackerView();
+      } else if (viewName === 'admin') {
+        renderAdminDashboard();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /*************************************************************************
+     * 5. CATEGORIES, DIETARY CHIPS & PRODUCT CATALOG RENDERING
+     *************************************************************************/
+    function renderCategoryPills() {
+      const bar = document.getElementById('categoryFilterBar');
+      if (!bar) return;
+
+      bar.innerHTML = CATEGORIES.map(cat => {
+        const count = cat.id === 'all'
+          ? products.length
+          : products.filter(p => p.category === cat.id).length;
+        const isActive = activeCategory === cat.id;
+
+        return `
+          <button
+            onclick="selectCategory('${cat.id}')"
+            class="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-xs sm:text-sm transition border ${
+              isActive
+                ? 'bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20'
+                : 'bg-white text-charcoal border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
+            }"
+          >
+            <span class="text-base">${cat.icon}</span>
+            <span>${cat.name}</span>
+            <span class="text-[11px] px-1.5 py-0.5 rounded-full ${
+              isActive ? 'bg-emerald-700 text-emerald-100' : 'bg-slate-100 text-slate-500'
+            }">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderDietaryPills() {
+      const bar = document.getElementById('dietaryFilterBar');
+      if (!bar) return;
+
+      bar.innerHTML = DIETARY_FILTERS.map(f => {
+        const isActive = activeDietary === f.id;
+        const labelText = f.id === 'favorites' ? `${f.label} (${wishlist.size})` : f.label;
+        return `
+          <button
+            onclick="selectDietaryFilter('${f.id}')"
+            class="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition border ${
+              isActive
+                ? 'bg-charcoal text-white border-charcoal shadow-xs'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-400 hover:text-charcoal'
+            }"
+          >
+            <i class="fa-solid ${f.icon} ${f.id === 'favorites' ? 'text-rose-500' : 'text-emerald-500'}"></i>
+            <span>${labelText}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectCategory(catId) {
+      activeCategory = catId;
+      renderCategoryPills();
+      renderProductGrid();
+    }
+
+    function selectDietaryFilter(dietId) {
+      activeDietary = dietId;
+      renderDietaryPills();
+      renderProductGrid();
+    }
+
+    function toggleWishlistFilter() {
+      switchView('storefront');
+      activeDietary = activeDietary === 'favorites' ? 'all' : 'favorites';
+      renderDietaryPills();
+      renderProductGrid();
+      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleProductWishlist(event, productId) {
+      event.stopPropagation();
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      if (wishlist.has(productId)) {
+        wishlist.delete(productId);
+        showToast(`Removed ${prod.name} from Saved Favorites`, 'info');
+      } else {
+        wishlist.add(productId);
+        showToast(`Saved ${prod.name} to your Favorites! ♥`, 'success');
+      }
+      updateWishlistBadges();
+      renderDietaryPills();
+      renderProductGrid();
+    }
+
+    function updateWishlistBadges() {
+      const badge = document.getElementById('wishlistCountBadge');
+      const icon = document.getElementById('headerWishlistIcon');
+      if (badge) badge.textContent = wishlist.size;
+      if (icon) {
+        icon.className = wishlist.size > 0
+          ? 'fa-solid fa-heart text-rose-500 text-base'
+          : 'fa-regular fa-heart text-rose-500 text-base';
+      }
+    }
+
+    function handleSortChange(val) {
+      sortBy = val;
+      renderProductGrid();
+    }
+
+    function handleSearchInput(val) {
+      searchQuery = val.trim().toLowerCase();
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.classList.toggle('hidden', searchQuery.length === 0);
+
+      const storefrontView = document.getElementById('view-storefront');
+      if (storefrontView && storefrontView.classList.contains('hidden')) {
+        switchView('storefront');
+      } else {
+        renderProductGrid();
+      }
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('globalSearchInput');
+      if (input) input.value = '';
+      handleSearchInput('');
+    }
+
+    function resetCatalogFilters() {
+      activeCategory = 'all';
+      activeDietary = 'all';
+      sortBy = 'featured';
+      document.getElementById('sortSelect').value = 'featured';
+      clearSearch();
+      renderCategoryPills();
+      renderDietaryPills();
+      renderProductGrid();
+    }
+
+    function scrollToCatalogAndFilter(category, dietary) {
+      activeCategory = category;
+      activeDietary = dietary;
+      renderCategoryPills();
+      renderDietaryPills();
+      renderProductGrid();
+      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToBundles() {
+      document.getElementById('recipeBundlesSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function getFilteredProducts() {
+      let list = products.filter(p => {
+        const matchesCat = activeCategory === 'all' || p.category === activeCategory;
+        const matchesSearch = !searchQuery ||
+          p.name.toLowerCase().includes(searchQuery) ||
+          p.category.toLowerCase().includes(searchQuery) ||
+          p.badge.toLowerCase().includes(searchQuery) ||
+          (p.dietary && p.dietary.some(d => d.toLowerCase().includes(searchQuery)));
+
+        let matchesDiet = true;
+        if (activeDietary === 'sale') {
+          matchesDiet = p.oldPrice && p.oldPrice > p.price;
+        } else if (activeDietary === 'favorites') {
+          matchesDiet = wishlist.has(p.id);
+        } else if (activeDietary !== 'all') {
+          matchesDiet = p.dietary && p.dietary.includes(activeDietary);
+        }
+
+        return matchesCat && matchesSearch && matchesDiet;
+      });
+
+      if (sortBy === 'price-asc') {
+        list.sort((a, b) => a.price - b.price);
+      } else if (sortBy === 'price-desc') {
+        list.sort((a, b) => b.price - a.price);
+      } else if (sortBy === 'protein') {
+        list.sort((a, b) => ((b.nutrition && b.nutrition.protein) || 0) - ((a.nutrition && a.nutrition.protein) || 0));
+      } else if (sortBy === 'discount') {
+        list.sort((a, b) => {
+          const discA = a.oldPrice ? ((a.oldPrice - a.price) / a.oldPrice) : 0;
+          const discB = b.oldPrice ? ((b.oldPrice - b.price) / b.oldPrice) : 0;
+          return discB - discA;
+        });
+      }
+      return list;
+    }
+
+    function renderProductGrid() {
+      const grid = document.getElementById('productGrid');
+      const emptyState = document.getElementById('emptyCatalogState');
+      const countBadge = document.getElementById('productCountBadge');
+      if (!grid) return;
+
+      const filtered = getFilteredProducts();
+      if (countBadge) countBadge.textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(product => {
+        const qtyInCart = cart[product.id] || 0;
+        const isFav = wishlist.has(product.id);
+        const discountPct = product.oldPrice && product.oldPrice > product.price
+          ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+          : null;
+        const cal = product.nutrition ? product.nutrition.calories : 120;
+        const prot = product.nutrition ? product.nutrition.protein : 4;
+
+        return `
+          <div
+            onclick="openProductModal(${product.id})"
+            class="product-card cursor-pointer group bg-white rounded-3xl border ${
+              qtyInCart > 0 ? 'border-emerald-500 ring-2 ring-emerald-500/15' : 'border-slate-200/90 hover:border-emerald-400'
+            } p-4 flex flex-col justify-between relative"
+          >
+            <div>
+              <!-- Visual Image Box -->
+              <div class="relative h-44 rounded-2xl bg-gradient-to-br ${product.bgGradient || 'from-emerald-50 to-slate-100'} flex items-center justify-center mb-3.5 overflow-hidden">
+                
+                <!-- Top-left Discount & Origin Badges -->
+                <div class="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
+                  ${discountPct ? `
+                    <span class="bg-amber-500 text-charcoal font-display font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-xs">
+                      SAVE ${discountPct}%
+                    </span>
+                  ` : ''}
+                  <span class="bg-white/90 backdrop-blur-xs text-charcoal font-bold text-[10px] px-2.5 py-0.5 rounded-full border border-slate-200/60">
+                    ${product.badge || 'Fresh'}
+                  </span>
+                </div>
+
+                <!-- Top-right Wishlist Heart Button -->
+                <button
+                  onclick="toggleProductWishlist(event, ${product.id})"
+                  class="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center transition transform hover:scale-110"
+                  title="Save to Favorites"
+                >
+                  <i class="${isFav ? 'fa-solid text-rose-500' : 'fa-regular text-slate-400'} fa-heart text-sm"></i>
+                </button>
+
+                <!-- Bottom-left Quick Nutrition Pill -->
+                <div class="absolute bottom-2.5 left-2.5 z-10 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-slate-200/60 text-[10px] font-bold text-slate-700 flex items-center gap-2">
+                  <span>🔥 ${cal} kcal</span>
+                  <span class="text-emerald-700">💪 ${prot}g Protein</span>
+                </div>
+
+                <!-- Bottom-right Info / Recipe Trigger Hint -->
+                <div class="absolute bottom-2.5 right-2.5 z-10 bg-emerald-600/90 text-white px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 opacity-90 group-hover:opacity-100 transition">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Nutrition</span>
+                </div>
+
+                <!-- Emoji Illustration -->
+                <span class="text-6xl transform group-hover:scale-110 transition-transform duration-300 select-none ${!product.inStock ? 'grayscale opacity-50' : ''}">
+                  ${product.emoji}
+                </span>
+              </div>
+
+              <!-- Category & Product Title -->
+              <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-emerald-600 mb-0.5">
+                <span>${product.category}</span>
+                ${!product.inStock ? `<span class="text-rose-600">Out of Stock</span>` : ''}
+              </div>
+              <h3 class="font-display font-bold text-base text-charcoal group-hover:text-emerald-600 transition leading-snug line-clamp-1">${product.name}</h3>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">${product.unit}</p>
+
+              <!-- Dietary Mini Tags Row -->
+              <div class="flex flex-wrap gap-1 mt-2.5">
+                ${(product.dietary || []).slice(0, 2).map(tag => `
+                  <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">${tag}</span>
+                `).join('')}
+                ${product.recipes && product.recipes.length > 0 ? `
+                  <span class="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60 px-2 py-0.5 rounded-md">
+                    <i class="fa-solid fa-utensils mr-0.5"></i>Recipe Inside
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Bottom Price & Interactive Add / + - Stepper -->
+            <div onclick="event.stopPropagation()" class="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <div>
+                <div class="flex items-baseline gap-1.5">
+                  <span class="font-display font-extrabold text-lg text-charcoal">${formatPKR(product.price)}</span>
+                  ${product.oldPrice ? `
+                    <span class="text-xs text-slate-400 line-through font-medium">${formatPKR(product.oldPrice)}</span>
+                  ` : ''}
+                </div>
+              </div>
+
+              ${!product.inStock ? `
+                <button disabled class="bg-slate-100 text-slate-400 font-bold text-xs px-3.5 py-2.5 rounded-xl cursor-not-allowed">
+                  Sold Out
+                </button>
+              ` : qtyInCart === 0 ? `
+                <button
+                  onclick="updateCartQty(${product.id}, 1)"
+                  class="bg-amber-500 hover:bg-amber-400 active:scale-95 text-charcoal font-display font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-xs shadow-amber-500/20 transition flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                  <span>Add</span>
+                </button>
+              ` : `
+                <div class="flex items-center bg-emerald-500 text-white rounded-xl p-1 shadow-md shadow-emerald-500/20">
+                  <button
+                    onclick="updateCartQty(${product.id}, ${qtyInCart - 1})"
+                    class="w-7 h-7 rounded-lg hover:bg-emerald-600 flex items-center justify-center transition font-bold"
+                  >
+                    <i class="fa-solid fa-minus text-xs"></i>
+                  </button>
+                  <span class="w-8 text-center font-display font-extrabold text-xs">${qtyInCart}</span>
+                  <button
+                    onclick="updateCartQty(${product.id}, ${qtyInCart + 1})"
+                    class="w-7 h-7 rounded-lg hover:bg-emerald-600 flex items-center justify-center transition font-bold"
+                  >
+                    <i class="fa-solid fa-plus text-xs"></i>
+                  </button>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /*************************************************************************
+     * 6. INTERACTIVE PRODUCT DETAIL, NUTRITION FACTS & RECIPES MODAL
+     *************************************************************************/
+    let currentModalProductId = null;
+
+    function openProductModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      currentModalProductId = productId;
+      renderProductModalContent(product);
+      document.getElementById('productDetailModal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productDetailModal').classList.add('hidden');
+      currentModalProductId = null;
+    }
+
+    function renderProductModalContent(product) {
+      const container = document.getElementById('productDetailModalContent');
+      if (!container) return;
+
+      const qtyInCart = cart[product.id] || 0;
+      const isFav = wishlist.has(product.id);
+      const nut = product.nutrition || { servingSize: '100g', calories: 120, protein: 5, carbs: 18, fat: 3, fiber: 2 };
+
+      // Calculate % Daily Value (%DV) based on standard 2,000 kcal reference
+      const calDV = Math.min(100, Math.round((nut.calories / 2000) * 100));
+      const protDV = Math.min(100, Math.round((nut.protein / 50) * 100));
+      const carbDV = Math.min(100, Math.round((nut.carbs / 275) * 100));
+      const fatDV = Math.min(100, Math.round((nut.fat / 78) * 100));
+      const fiberDV = Math.min(100, Math.round((nut.fiber / 28) * 100));
+
+      const recipesHTML = (product.recipes || []).map(rec => {
+        const ingProducts = (rec.ingredientIds || [])
+          .map(id => products.find(p => p.id === id))
+          .filter(Boolean);
+        const bundlePrice = ingProducts.reduce((sum, item) => sum + item.price, 0);
+
+        return `
+          <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200/80 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-xl bg-amber-500 text-charcoal flex items-center justify-center font-bold text-sm">
+                  <i class="fa-solid fa-utensils"></i>
+                </span>
+                <div>
+                  <h5 class="font-display font-extrabold text-sm sm:text-base text-charcoal">${rec.title}</h5>
+                  <div class="text-[11px] text-slate-500 font-semibold">
+                    <span>⏱️ Prep: ${rec.prepTime}</span> • <span>🍽️ ${rec.servings}</span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onclick="addRecipeIngredientsToCart('${rec.title.replace(/'/g, "\\'")}', [${rec.ingredientIds.join(',')}])"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add ${ingProducts.length} Ingredients (${formatPKR(bundlePrice)})</span>
+              </button>
+            </div>
+
+            <p class="text-xs text-slate-700 leading-relaxed">${rec.steps}</p>
+
+            <!-- Matching Store Ingredients Chips -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-1">Store Items:</span>
+              ${ingProducts.map(ing => `
+                <span class="bg-white border border-amber-200 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-charcoal flex items-center gap-1">
+                  <span>${ing.emoji}</span>
+                  <span>${ing.name}</span>
+                  <span class="text-emerald-600 font-bold">(${formatPKR(ing.price)})</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <!-- Top Modal Header -->
+        <div class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white px-6 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-200">
+            <i class="fa-solid fa-circle-check text-amber-400"></i>
+            <span>${product.category} • Fresh Basket Quality Verified</span>
+          </div>
+          <button onclick="closeProductModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Modal Body Grid -->
+        <div class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 max-h-[82vh] overflow-y-auto">
+          
+          <!-- Left Column (5 cols): Visuals, Price, Dietary Badges & Storage -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="relative h-56 rounded-3xl bg-gradient-to-br ${product.bgGradient || 'from-emerald-50 to-slate-100'} flex items-center justify-center border border-slate-200/80 shadow-inner">
+              <span class="text-8xl select-none">${product.emoji}</span>
+              <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-charcoal font-extrabold text-xs px-3 py-1 rounded-full border border-slate-200">
+                ${product.badge || 'Farm Fresh'}
+              </span>
+              <button
+                onclick="toggleProductWishlist(event, ${product.id}); renderProductModalContent(products.find(p => p.id === ${product.id}))"
+                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white shadow-xs flex items-center justify-center text-base"
+              >
+                <i class="${isFav ? 'fa-solid text-rose-500' : 'fa-regular text-slate-400'} fa-heart"></i>
+              </button>
+            </div>
+
+            <div>
+              <h3 class="font-display font-extrabold text-2xl text-charcoal">${product.name}</h3>
+              <p class="text-sm text-slate-500 font-medium mt-0.5">${product.unit}</p>
+
+              <div class="flex items-baseline gap-2.5 mt-3">
+                <span class="font-display font-extrabold text-3xl text-emerald-600">${formatPKR(product.price)}</span>
+                ${product.oldPrice ? `
+                  <span class="text-sm text-slate-400 line-through font-semibold">${formatPKR(product.oldPrice)}</span>
+                  <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-2.5 py-0.5 rounded-full">
+                    Save ${formatPKR(product.oldPrice - product.price)}
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Add to Cart / Quantity Stepper inside Modal -->
+            <div class="pt-2">
+              ${qtyInCart === 0 ? `
+                <button
+                  onclick="updateCartQty(${product.id}, 1); renderProductModalContent(products.find(p => p.id === ${product.id}))"
+                  class="w-full bg-amber-500 hover:bg-amber-400 text-charcoal font-display font-extrabold py-3.5 px-5 rounded-2xl shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-2 text-sm"
+                >
+                  <i class="fa-solid fa-cart-plus"></i>
+                  <span>Add to Basket — ${formatPKR(product.price)}</span>
+                </button>
+              ` : `
+                <div class="flex items-center justify-between bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-2">
+                  <span class="text-xs font-bold text-emerald-900 pl-2">In Your Basket:</span>
+                  <div class="flex items-center bg-emerald-500 text-white rounded-xl p-1">
+                    <button
+                      onclick="updateCartQty(${product.id}, ${qtyInCart - 1}); renderProductModalContent(products.find(p => p.id === ${product.id}))"
+                      class="w-8 h-8 rounded-lg hover:bg-emerald-600 flex items-center justify-center font-bold"
+                    >
+                      <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <span class="w-10 text-center font-display font-extrabold text-sm">${qtyInCart}</span>
+                    <button
+                      onclick="updateCartQty(${product.id}, ${qtyInCart + 1}); renderProductModalContent(products.find(p => p.id === ${product.id}))"
+                      class="w-8 h-8 rounded-lg hover:bg-emerald-600 flex items-center justify-center font-bold"
+                    >
+                      <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                  </div>
+                </div>
+              `}
+            </div>
+
+            <!-- Dietary & Quality Badges -->
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Dietary & Quality Certifications</span>
+              <div class="flex flex-wrap gap-2">
+                ${(product.dietary || ['100% Halal']).map(badge => `
+                  <span class="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-xl flex items-center gap-1.5">
+                    <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i>
+                    <span>${badge}</span>
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Farm Origin & Storage Instructions -->
+            <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 text-xs space-y-2">
+              <div class="flex items-start gap-2">
+                <i class="fa-solid fa-location-dot text-emerald-600 mt-0.5"></i>
+                <div>
+                  <span class="font-bold text-charcoal">Source / Origin:</span>
+                  <span class="text-slate-600 ml-1">${product.origin || 'Pakistan Local Farms'}</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fa-solid fa-snowflake text-sky-600 mt-0.5"></i>
+                <div>
+                  <span class="font-bold text-charcoal">Storage Tip:</span>
+                  <span class="text-slate-600 ml-1">${product.storage || 'Store in a cool, dry place.'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (7 cols): Complete Nutrition Facts Table & Interactive Recipes -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Nutrition Facts Panel -->
+            <div class="bg-white rounded-2xl border-2 border-charcoal p-5 shadow-xs">
+              <div class="border-b-4 border-charcoal pb-2 mb-3 flex items-baseline justify-between">
+                <div>
+                  <h4 class="font-display font-extrabold text-xl text-charcoal tracking-tight">Nutrition Facts</h4>
+                  <p class="text-xs text-slate-500 font-medium">Serving Size: <strong>${nut.servingSize}</strong></p>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Calories</span>
+                  <span class="font-display font-extrabold text-3xl text-charcoal">${nut.calories}</span>
+                </div>
+              </div>
+
+              <div class="text-[11px] font-bold text-right text-slate-500 border-b border-slate-200 pb-1 mb-2.5">
+                % Daily Value* (based on 2,000 kcal diet)
+              </div>
+
+              <!-- Nutrient Rows with Animated %DV Progress Bars -->
+              <div class="space-y-3 text-xs">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span><strong>Protein</strong> ${nut.protein}g</span>
+                    <span class="font-extrabold text-emerald-700">${protDV}% DV</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500 rounded-full" style="width: ${protDV}%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span><strong>Total Carbohydrates</strong> ${nut.carbs}g</span>
+                    <span class="font-extrabold text-sky-700">${carbDV}% DV</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-sky-500 rounded-full" style="width: ${carbDV}%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span><strong>Total Fat</strong> ${nut.fat}g</span>
+                    <span class="font-extrabold text-amber-700">${fatDV}% DV</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-amber-500 rounded-full" style="width: ${fatDV}%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span><strong>Dietary Fiber</strong> ${nut.fiber}g</span>
+                    <span class="font-extrabold text-teal-700">${fiberDV}% DV</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-teal-500 rounded-full" style="width: ${fiberDV}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Recipe Suggestions -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-display font-extrabold text-base text-charcoal flex items-center gap-2">
+                  <i class="fa-solid fa-hat-chef text-amber-500"></i>
+                  <span>Chef Recipe Suggestions & 1-Click Ingredients</span>
+                </h4>
+              </div>
+              ${recipesHTML || `<p class="text-xs text-slate-500">Enjoy fresh straight from the pack!</p>`}
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function addRecipeIngredientsToCart(recipeTitle, ingredientIds) {
+      ingredientIds.forEach(id => {
+        const prod = products.find(p => p.id === id);
+        if (prod && prod.inStock) {
+          cart[id] = (cart[id] || 0) + 1;
+        }
+      });
+      syncCartUI();
+      renderProductGrid();
+      closeProductModal();
+      showToast(`Added all ingredients for "${recipeTitle}" to your basket!`, 'success');
+      toggleCartDrawer(true);
+    }
+
+    /*************************************************************************
+     * 7. SHOPPING CART & BUNDLES LOGIC
+     *************************************************************************/
+    function updateCartQty(productId, newQty) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      if (newQty <= 0) {
+        delete cart[productId];
+        showToast(`Removed ${product.name} from basket`, 'info');
+      } else {
+        const isFirstAdd = !cart[productId];
+        cart[productId] = newQty;
+        if (isFirstAdd) {
+          showToast(`Added ${product.name} (${formatPKR(product.price)}) to basket!`, 'success');
+        }
+      }
+
+      // Pulse animation on cart badge
+      const badge = document.getElementById('cartCountBadge');
+      if (badge) {
+        badge.classList.remove('animate-bump');
+        void badge.offsetWidth;
+        badge.classList.add('animate-bump');
+      }
+
+      syncCartUI();
+      renderProductGrid();
+    }
+
+    function addStarterBundle() {
+      const bundleIds = [101, 102, 104, 106];
+      bundleIds.forEach(id => {
+        cart[id] = (cart[id] || 0) + 1;
+      });
+      syncCartUI();
+      renderProductGrid();
+      showToast('Added Desi Kitchen Starter Box (4 items) to your basket!', 'success');
+      toggleCartDrawer(true);
+    }
+
+    function addCustomBundle(bundleName, idsArray) {
+      idsArray.forEach(id => {
+        cart[id] = (cart[id] || 0) + 1;
+      });
+      syncCartUI();
+      renderProductGrid();
+      showToast(`Added "${bundleName}" to your basket!`, 'success');
+      toggleCartDrawer(true);
+    }
+
+    function clearEntireCart() {
+      cart = {};
+      appliedPromo = null;
+      document.getElementById('promoAppliedBadge').classList.add('hidden');
+      syncCartUI();
+      renderProductGrid();
+      showToast('Your shopping basket has been cleared', 'info');
+    }
+
+    function calculateCartTotals() {
+      let subtotal = 0;
+      let totalItems = 0;
+
+      Object.entries(cart).forEach(([id, qty]) => {
+        const prod = products.find(p => p.id === Number(id));
+        if (prod && prod.inStock) {
+          subtotal += prod.price * qty;
+          totalItems += qty;
+        }
+      });
+
+      const isScheduledFree = selectedSlotType === 'scheduled';
+      const deliveryFee = totalItems === 0
+        ? 0
+        : (subtotal >= FREE_DELIVERY_THRESHOLD || isScheduledFree ? 0 : STANDARD_DELIVERY_FEE);
+
+      let discountRate = 0;
+      if (appliedPromo === 'FRESH20') discountRate = 0.20;
+      else if (appliedPromo === 'PAK10') discountRate = 0.10;
+
+      const discount = Math.round(subtotal * discountRate);
+      const grandTotal = Math.max(0, subtotal - discount + deliveryFee);
+
+      return { subtotal, totalItems, deliveryFee, discount, grandTotal };
+    }
+
+    function syncCartUI() {
+      const { subtotal, totalItems, deliveryFee, discount, grandTotal } = calculateCartTotals();
+
+      document.getElementById('cartCountBadge').textContent = totalItems;
+      document.getElementById('cartTotalBadge').textContent = formatPKR(grandTotal);
+      document.getElementById('drawerItemCountText').textContent = `${totalItems} item${totalItems === 1 ? '' : 's'} selected`;
+      document.getElementById('clearCartBtn').classList.toggle('hidden', totalItems === 0);
+
+      // Free Delivery Progress Bar
+      const pct = Math.min(100, Math.round((subtotal / FREE_DELIVERY_THRESHOLD) * 100));
+      document.getElementById('freeDeliveryProgressFill').style.width = `${pct}%`;
+      document.getElementById('freeDeliveryPercent').textContent = `${pct}%`;
+
+      const msgEl = document.getElementById('freeDeliveryMessage');
+      if (subtotal >= FREE_DELIVERY_THRESHOLD) {
+        msgEl.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Mubarak! You've unlocked FREE Express Delivery!</span>`;
+      } else {
+        const remaining = FREE_DELIVERY_THRESHOLD - subtotal;
+        msgEl.innerHTML = `Add <strong>${formatPKR(remaining)}</strong> more for <strong class="text-emerald-700">FREE Express Delivery!</strong>`;
+      }
+
+      const container = document.getElementById('cartItemsContainer');
+      const entries = Object.entries(cart);
+
+      if (entries.length === 0) {
+        container.innerHTML = `
+          <div class="py-16 text-center space-y-3">
+            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mx-auto">
+              🛒
+            </div>
+            <h4 class="font-display font-bold text-base text-charcoal">Your Fresh Basket is empty</h4>
+            <p class="text-xs text-slate-500 max-w-xs mx-auto">Add Swat apples, Olpers milk, Basmati rice, or a 1-click Biryani Bundle to get started.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = entries.map(([id, qty]) => {
+          const prod = products.find(p => p.id === Number(id));
+          if (!prod) return '';
+          const lineTotal = prod.price * qty;
+          return `
+            <div class="py-3.5 flex items-center justify-between gap-3">
+              <div onclick="openProductModal(${prod.id})" class="cursor-pointer flex items-center gap-3 min-w-0">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl shrink-0">
+                  ${prod.emoji}
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-display font-bold text-sm text-charcoal hover:text-emerald-600 truncate">${prod.name}</h4>
+                  <div class="text-xs text-slate-500">${prod.unit} • ${formatPKR(prod.price)}</div>
+                  <div class="text-xs font-extrabold text-emerald-600 mt-0.5">${formatPKR(lineTotal)}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200">
+                  <button onclick="updateCartQty(${prod.id}, ${qty - 1})" class="w-6 h-6 rounded-lg hover:bg-white text-charcoal flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <span class="w-7 text-center font-bold text-xs">${qty}</span>
+                  <button onclick="updateCartQty(${prod.id}, ${qty + 1})" class="w-6 h-6 rounded-lg hover:bg-white text-charcoal flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <button onclick="updateCartQty(${prod.id}, 0)" class="text-slate-400 hover:text-rose-500 p-1" title="Remove item">
+                  <i class="fa-regular fa-trash-can text-xs"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('summarySubtotal').textContent = formatPKR(subtotal);
+      document.getElementById('summaryDelivery').innerHTML = deliveryFee === 0 && totalItems > 0
+        ? `<span class="text-emerald-600 font-bold">FREE</span>`
+        : formatPKR(deliveryFee);
+
+      const discountRow = document.getElementById('summaryDiscountRow');
+      if (discount > 0) {
+        discountRow.classList.remove('hidden');
+        document.getElementById('summaryDiscountLabel').textContent = `Promo (${appliedPromo})`;
+        document.getElementById('summaryDiscount').textContent = `-${formatPKR(discount)}`;
+      } else {
+        discountRow.classList.add('hidden');
+      }
+
+      document.getElementById('summaryGrandTotal').textContent = formatPKR(grandTotal);
+      document.getElementById('checkoutBtnTotal').textContent = formatPKR(grandTotal);
+      document.getElementById('proceedToCheckoutBtn').disabled = totalItems === 0;
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cartDrawer');
+      const backdrop = document.getElementById('cartDrawerBackdrop');
+
+      if (open) {
+        backdrop.classList.remove('hidden');
+        setTimeout(() => {
+          backdrop.classList.remove('opacity-0');
+          drawer.classList.remove('translate-x-full');
+        }, 10);
+      } else {
+        backdrop.classList.add('opacity-0');
+        drawer.classList.add('translate-x-full');
+        setTimeout(() => backdrop.classList.add('hidden'), 300);
+      }
+    }
+
+    function applyPromoCode() {
+      const input = document.getElementById('promoCodeInput');
+      const code = input.value.trim().toUpperCase();
+      if (!code) {
+        showToast('Please enter a promo code (FRESH20 or PAK10)', 'warning');
+        return;
+      }
+      if (code === 'FRESH20' || code === 'PAK10') {
+        appliedPromo = code;
+        input.value = '';
+        const pctText = code === 'FRESH20' ? '20% OFF' : '10% OFF';
+        document.getElementById('promoAppliedText').innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Code <strong>${code}</strong> applied (${pctText})`;
+        document.getElementById('promoAppliedBadge').classList.remove('hidden');
+        syncCartUI();
+        showToast(`Promo code ${code} applied! (${pctText})`, 'success');
+      } else {
+        showToast('Invalid code. Use FRESH20 (20% off) or PAK10 (10% off)!', 'warning');
+      }
+    }
+
+    function applyOneClickPromo(code) {
+      appliedPromo = code;
+      document.getElementById('promoAppliedText').innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Code <strong>${code}</strong> applied (20% OFF)`;
+      document.getElementById('promoAppliedBadge').classList.remove('hidden');
+      syncCartUI();
+      showToast(`20% Discount (${code}) automatically applied to your basket!`, 'success');
+    }
+
+    function removePromoCode() {
+      appliedPromo = null;
+      document.getElementById('promoAppliedBadge').classList.add('hidden');
+      syncCartUI();
+      showToast('Promo code removed', 'info');
+    }
+
+    /*************************************************************************
+     * 8. CHECKOUT MODAL & DIGITAL RECEIPT
+     *************************************************************************/
+    function openCheckoutModal() {
+      const { totalItems, grandTotal } = calculateCartTotals();
+      if (totalItems === 0) {
+        showToast('Add some groceries to your basket before checking out', 'warning');
+        return;
+      }
+      toggleCartDrawer(false);
+      document.getElementById('chkAddress').value = `${currentDeliveryLocation}, House 14-B`;
+      document.getElementById('chkSummaryCount').textContent = `${totalItems} item${totalItems === 1 ? '' : 's'}`;
+      document.getElementById('chkSummaryTotal').textContent = formatPKR(grandTotal);
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function selectDeliverySlot(labelEl, slotValue, slotType) {
+      selectedSlotValue = slotValue;
+      selectedSlotType = slotType;
+      document.querySelectorAll('.delivery-slot-card').forEach(el => {
+        el.className = 'delivery-slot-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-start gap-3 transition';
+      });
+      labelEl.className = 'delivery-slot-card cursor-pointer rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 p-3.5 flex items-start gap-3 transition';
+
+      syncCartUI();
+      const { grandTotal } = calculateCartTotals();
+      document.getElementById('chkSummaryTotal').textContent = formatPKR(grandTotal);
+    }
+
+    function selectPaymentMethod(labelEl, paymentValue) {
+      selectedPaymentValue = paymentValue;
+      document.querySelectorAll('.payment-method-card').forEach(el => {
+        el.className = 'payment-method-card cursor-pointer rounded-2xl border-2 border-slate-200 hover:border-emerald-300 p-3.5 flex items-center gap-3 transition';
+      });
+      labelEl.className = 'payment-method-card cursor-pointer rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 p-3.5 flex items-center gap-3 transition';
+    }
+
+    function submitOrderCheckout(event) {
+      event.preventDefault();
+      const { grandTotal } = calculateCartTotals();
+      const customerName = document.getElementById('chkName').value.trim() || 'Valued Customer';
+      const phone = document.getElementById('chkPhone').value.trim();
+      const address = document.getElementById('chkAddress').value.trim();
+      const instructions = document.getElementById('chkInstructions').value.trim() || 'Standard doorstep delivery';
+
+      const orderItems = Object.entries(cart).map(([id, qty]) => {
+        const prod = products.find(p => p.id === Number(id));
+        return {
+          name: prod.name,
+          unit: prod.unit,
+          qty,
+          price: prod.price,
+          emoji: prod.emoji
+        };
+      });
+
+      const randomId = 'FB-' + Math.floor(1000 + Math.random() * 9000);
+      const newOrder = {
+        id: randomId,
+        customerName,
+        phone,
+        address,
+        instructions,
+        slot: selectedSlotValue,
+        paymentMethod: selectedPaymentValue,
+        statusIndex: 0,
+        createdAt: 'Just now',
+        total: grandTotal,
+        items: orderItems
+      };
+
+      orders.unshift(newOrder);
+      selectedOrderId = newOrder.id;
+
+      logOrderEmailEvent(
+        newOrder,
+        `Order Confirmed #${newOrder.id} — ${formatPKR(grandTotal)} (${newOrder.paymentMethod})`,
+        `Assalam-o-Alaikum ${customerName}! Your Fresh Basket order #${newOrder.id} with ${orderItems.length} item(s) totaling ${formatPKR(grandTotal)} has been received for ${newOrder.slot} to ${address}.`
+      );
+
+      cart = {};
+      appliedPromo = null;
+      document.getElementById('promoAppliedBadge').classList.add('hidden');
+      syncCartUI();
+      renderProductGrid();
+      closeCheckoutModal();
+
+      showToast(`Order #${newOrder.id} (${formatPKR(grandTotal)}) placed! Tracking live...`, 'success');
+      switchView('tracker');
+    }
+
+    function openReceiptModal() {
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (!order) return;
+
+      document.getElementById('receiptOrderMeta').textContent = `Order #${order.id} • ${order.createdAt}`;
+      document.getElementById('receiptCustomerInfo').innerHTML = `
+        <div><strong>Customer:</strong> ${order.customerName} (${order.phone})</div>
+        <div><strong>Address:</strong> ${order.address}</div>
+        <div><strong>Slot:</strong> ${order.slot}</div>
+        <div><strong>Payment:</strong> ${order.paymentMethod}</div>
+      `;
+      document.getElementById('receiptItemsTable').innerHTML = order.items.map(i => `
+        <div class="flex justify-between">
+          <span>${i.qty}x ${i.name}</span>
+          <span class="font-semibold">${formatPKR(i.price * i.qty)}</span>
+        </div>
+      `).join('');
+      document.getElementById('receiptTotalsBox').innerHTML = `
+        <span>TOTAL PAID / PAYABLE</span>
+        <span class="text-emerald-600">${formatPKR(order.total)}</span>
+      `;
+      document.getElementById('receiptModal').classList.remove('hidden');
+    }
+
+    function closeReceiptModal() {
+      document.getElementById('receiptModal').classList.add('hidden');
+    }
+
+    /*************************************************************************
+     * 9. LIVE ORDER TRACKER VIEW & SIMULATION
+     *************************************************************************/
+    function renderOrderTrackerView() {
+      const dropdown = document.getElementById('orderSelectorDropdown');
+      if (!dropdown) return;
+
+      dropdown.innerHTML = orders.map(o => `
+        <option value="${o.id}" ${o.id === selectedOrderId ? 'selected' : ''}>
+          Order #${o.id} (${ORDER_STEPS[o.statusIndex].title}) — ${formatPKR(o.total)}
+        </option>
+      `).join('');
+
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (!order) return;
+
+      const stepMeta = ORDER_STEPS[order.statusIndex];
+
+      document.getElementById('trackerOrderHeadline').textContent = `Order #${order.id} — ${stepMeta.title}`;
+      document.getElementById('trackerSlotLabel').textContent = `Slot: ${order.slot} • Delivering to ${order.address}`;
+
+      const progressWidths = ['15%', '45%', '75%', '100%'];
+      document.getElementById('trackerProgressFill').style.width = progressWidths[order.statusIndex];
+
+      const nodesContainer = document.getElementById('trackerStepNodes');
+      nodesContainer.innerHTML = ORDER_STEPS.map((step, idx) => {
+        const isCompleted = idx <= order.statusIndex;
+        const isCurrent = idx === order.statusIndex;
+
+        return `
+          <div
+            onclick="setOrderStepDirectly('${order.id}', ${idx})"
+            class="cursor-pointer p-4 rounded-2xl border transition flex items-start gap-3 ${
+              isCurrent
+                ? 'border-emerald-500 bg-emerald-50/70 shadow-xs'
+                : isCompleted
+                ? 'border-emerald-200 bg-white'
+                : 'border-slate-200 bg-slate-50/60 opacity-60'
+            }"
+          >
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-sm font-bold ${
+              isCompleted ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'
+            }">
+              <i class="fa-solid ${step.icon}"></i>
+            </div>
+            <div>
+              <div class="text-xs font-extrabold text-charcoal flex items-center gap-1.5">
+                <span>${idx + 1}. ${step.title}</span>
+                ${isCurrent ? `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>` : ''}
+              </div>
+              <p class="text-[11px] text-slate-500 mt-0.5">${step.subtitle}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('trackerMapStatusText').textContent = stepMeta.mapText;
+      document.getElementById('trackerEtaMinutes').textContent = stepMeta.eta;
+      const riderPin = document.getElementById('svgRiderPin');
+      if (riderPin) riderPin.setAttribute('transform', stepMeta.pinCoords);
+
+      document.getElementById('trackerCustomerName').textContent = order.customerName;
+      document.getElementById('trackerPaymentBadge').textContent = order.paymentMethod;
+      document.getElementById('trackerInstructions').textContent = `"${order.instructions}"`;
+      document.getElementById('trackerTotalAmount').textContent = formatPKR(order.total);
+
+      const itemsContainer = document.getElementById('trackerItemsList');
+      itemsContainer.innerHTML = order.items.map(item => `
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${item.emoji}</span>
+            <div>
+              <div class="font-bold text-charcoal">${item.name}</div>
+              <div class="text-xs text-slate-500">${item.unit} × ${item.qty}</div>
+            </div>
+          </div>
+          <span class="font-display font-bold text-charcoal">${formatPKR(item.price * item.qty)}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectTrackedOrder(orderId) {
+      selectedOrderId = orderId;
+      renderOrderTrackerView();
+    }
+
+    function simulateNextOrderStep() {
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (!order) return;
+
+      if (order.statusIndex < 3) {
+        order.statusIndex += 1;
+        const step = ORDER_STEPS[order.statusIndex];
+        logOrderEmailEvent(
+          order,
+          `Order #${order.id} Update: ${step.title}`,
+          `Hi ${order.customerName}, your order #${order.id} status is now "${step.title}". ${step.mapText} (ETA: ${step.eta}).`
+        );
+        renderOrderTrackerView();
+        showToast(`Order #${order.id} advanced to: ${step.title}`, 'success');
+      } else {
+        showToast(`Order #${order.id} is Delivered! Click Reset to replay.`, 'info');
+      }
+    }
+
+    function resetTrackedOrderStep() {
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (!order) return;
+      order.statusIndex = 0;
+      renderOrderTrackerView();
+      showToast(`Order #${order.id} reset to Step 1`, 'info');
+    }
+
+    function setOrderStepDirectly(orderId, stepIdx) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      order.statusIndex = stepIdx;
+      renderOrderTrackerView();
+      showToast(`Updated #${order.id} status to: ${ORDER_STEPS[stepIdx].title}`, 'info');
+    }
+
+    function sendRiderPing(message) {
+      const order = orders.find(o => o.id === selectedOrderId) || orders[0];
+      if (order) {
+        order.instructions = message;
+        renderOrderTrackerView();
+      }
+      showToast(`Sent note to Rider Bilal Ahmed: "${message}"`, 'success');
+    }
+
+    /*************************************************************************
+     * 10. ADMIN DASHBOARD: INVENTORY & ORDER MANAGEMENT (PKR)
+     *************************************************************************/
+    let adminInventorySearch = '';
+
+    function renderAdminDashboard() {
+      const totalRev = orders.reduce((acc, o) => acc + o.total, 0);
+      const activeCount = orders.filter(o => o.statusIndex < 3).length;
+      const outOfStockCount = products.filter(p => !p.inStock).length;
+
+      document.getElementById('adminKpiRevenue').textContent = formatPKR(totalRev);
+      document.getElementById('adminKpiOrders').textContent = activeCount;
+      document.getElementById('adminKpiProducts').textContent = products.length;
+      document.getElementById('adminKpiOutOfStock').textContent = outOfStockCount;
+
+      renderAdminOrdersQueue();
+      renderAdminInventoryTable();
+    }
+
+    function renderAdminOrdersQueue() {
+      const listEl = document.getElementById('adminOrdersList');
+      if (!listEl) return;
+
+      listEl.innerHTML = orders.map(o => `
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-display font-extrabold text-sm text-charcoal">#${o.id}</span>
+              <span class="text-xs text-slate-500 ml-1">• ${o.customerName}</span>
+            </div>
+            <span class="font-display font-bold text-sm text-emerald-600">${formatPKR(o.total)}</span>
+          </div>
+          <div class="text-xs text-slate-500 flex flex-wrap gap-x-3 gap-y-1">
+            <span><i class="fa-regular fa-clock mr-1"></i>${o.slot}</span>
+            <span><i class="fa-solid fa-wallet mr-1"></i>${o.paymentMethod}</span>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Live Status:</span>
+            <select
+              onchange="handleAdminOrderStatusChange('${o.id}', this.value)"
+              class="bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-charcoal focus:border-emerald-500 outline-none"
+            >
+              ${ORDER_STEPS.map((s, idx) => `
+                <option value="${idx}" ${o.statusIndex === idx ? 'selected' : ''}>
+                  ${idx + 1}. ${s.title}
+                </option>
+              `).join('')}
+            </select>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleAdminOrderStatusChange(orderId, newStatusIdx) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      order.statusIndex = Number(newStatusIdx);
+      const step = ORDER_STEPS[order.statusIndex];
+      logOrderEmailEvent(
+        order,
+        `Admin Dispatch Update #${order.id}: ${step.title}`,
+        `Store Manager updated Order #${order.id} for ${order.customerName} to "${step.title}" (${step.mapText}).`
+      );
+      renderAdminDashboard();
+      showToast(`Order #${orderId} updated to "${step.title}"`, 'success');
+    }
+
+    function filterAdminInventory(val) {
+      adminInventorySearch = val.trim().toLowerCase();
+      renderAdminInventoryTable();
+    }
+
+    function renderAdminInventoryTable() {
+      const tbody = document.getElementById('adminInventoryTableBody');
+      if (!tbody) return;
+
+      const list = products.filter(p =>
+        !adminInventorySearch ||
+        p.name.toLowerCase().includes(adminInventorySearch) ||
+        p.category.toLowerCase().includes(adminInventorySearch)
+      );
+
+      tbody.innerHTML = list.map(prod => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="py-3 px-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">${prod.emoji}</span>
+              <div>
+                <div class="font-bold text-charcoal leading-tight">${prod.name}</div>
+                <div class="text-[11px] text-slate-400">${prod.unit}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-2">
+            <span class="bg-slate-100 text-slate-700 text-[11px] font-semibold px-2.5 py-1 rounded-lg">${prod.category}</span>
+          </td>
+          <td class="py-3 px-2">
+            <div class="flex items-center gap-1">
+              <span class="text-slate-400 font-bold text-xs">Rs.</span>
+              <input
+                type="number"
+                min="10"
+                value="${prod.price}"
+                onchange="handleAdminPriceEdit(${prod.id}, this.value)"
+                class="w-20 px-2 py-1 rounded-lg border border-slate-200 font-bold text-charcoal focus:border-emerald-500 outline-none"
+              />
+            </div>
+          </td>
+          <td class="py-3 px-2">
+            <button
+              onclick="toggleAdminProductStock(${prod.id})"
+              class="px-2.5 py-1 rounded-full text-[11px] font-bold transition ${
+                prod.inStock
+                  ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                  : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+              }"
+            >
+              ${prod.inStock ? '● In Stock' : '○ Out of Stock'}
+            </button>
+          </td>
+          <td class="py-3 px-2 text-right">
+            <button
+              onclick="deleteAdminProduct(${prod.id})"
+              class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition"
+              title="Delete SKU"
+            >
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleAdminPriceEdit(productId, newPriceVal) {
+      const prod = products.find(p => p.id === productId);
+      const parsed = Math.round(parseFloat(newPriceVal));
+      if (!prod || isNaN(parsed) || parsed <= 0) return;
+
+      prod.price = parsed;
+      syncCartUI();
+      showToast(`Updated ${prod.name} price to ${formatPKR(parsed)}`, 'success');
+    }
+
+    function toggleAdminProductStock(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+      prod.inStock = !prod.inStock;
+      if (!prod.inStock && cart[productId]) {
+        delete cart[productId];
+      }
+      syncCartUI();
+      renderAdminDashboard();
+      showToast(`${prod.name} marked as ${prod.inStock ? 'In Stock' : 'Out of Stock'}`, 'info');
+    }
+
+    function deleteAdminProduct(productId) {
+      const idx = products.findIndex(p => p.id === productId);
+      if (idx === -1) return;
+      const removed = products[idx];
+      products.splice(idx, 1);
+      delete cart[productId];
+      syncCartUI();
+      renderAdminDashboard();
+      showToast(`Removed "${removed.name}" from store catalog`, 'info');
+    }
+
+    function handleAdminAddProduct(event) {
+      event.preventDefault();
+      const name = document.getElementById('newProdName').value.trim();
+      const category = document.getElementById('newProdCategory').value;
+      const unit = document.getElementById('newProdUnit').value.trim();
+      const price = Math.round(parseFloat(document.getElementById('newProdPrice').value));
+      const oldPriceRaw = Math.round(parseFloat(document.getElementById('newProdOldPrice').value));
+      const emoji = document.getElementById('newProdEmoji').value;
+
+      if (!name || !unit || isNaN(price)) return;
+
+      const newProduct = {
+        id: Date.now(),
+        name,
+        category,
+        unit,
+        price,
+        oldPrice: !isNaN(oldPriceRaw) && oldPriceRaw > price ? oldPriceRaw : null,
+        emoji,
+        bgGradient: 'from-emerald-50 to-teal-100',
+        badge: 'New Arrival',
+        origin: 'Fresh Basket Verified Partner, Pakistan',
+        storage: 'Store in a cool, dry place.',
+        inStock: true,
+        dietary: ['100% Halal', 'Farm Organic'],
+        nutrition: { servingSize: '100g', calories: 140, protein: 6.5, carbs: 18, fat: 4.2, fiber: 3.0 },
+        recipes: [
+          {
+            title: `Fresh ${name} Family Serving`,
+            prepTime: '10 mins',
+            servings: '4 Servings',
+            steps: `Enjoy ${name} with your favorite Fresh Basket kitchen staples.`,
+            ingredientIds: [104, 116]
+          }
+        ]
+      };
+
+      products.unshift(newProduct);
+      document.getElementById('adminAddProductForm').reset();
+      renderAdminDashboard();
+      showToast(`Published "${name}" (${formatPKR(price)}) to storefront!`, 'success');
+    }
+
+    /*************************************************************************
+     * 11. LOCATION MODAL, FLASH COUNTDOWN & TOAST SYSTEM
+     *************************************************************************/
+    function openLocationModal() {
+      document.getElementById('locationModal').classList.remove('hidden');
+    }
+
+    function closeLocationModal() {
+      document.getElementById('locationModal').classList.add('hidden');
+    }
+
+    function setDeliveryLocation(address, eta) {
+      currentDeliveryLocation = address;
+      currentLocationEta = eta;
+      document.getElementById('currentLocationLabel').textContent = address;
+      document.getElementById('mobileLocationLabel').textContent = address;
+      document.getElementById('navEtaBadge').textContent = `• ${eta}`;
+      closeLocationModal();
+      showToast(`Delivery area set to ${address} (ETA: ${eta})`, 'success');
+    }
+
+    function saveCustomLocation() {
+      const input = document.getElementById('customLocationInput');
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Please enter a valid sector or city name', 'warning');
+        return;
+      }
+      setDeliveryLocation(val, '25-35 mins');
+      input.value = '';
+    }
+
+    function handleModalBackdropClick(event, modalId) {
+      if (event.target && event.target.id === modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+      }
+    }
+
+    // Live Flash Sale Countdown Timer
+    let flashSecondsRemaining = (4 * 3600) + (42 * 60) + 19;
+    function startFlashCountdown() {
+      const display = document.getElementById('flashTimerDisplay');
+      setInterval(() => {
+        if (flashSecondsRemaining > 0) flashSecondsRemaining--;
+        else flashSecondsRemaining = 4 * 3600;
+        const hrs = String(Math.floor(flashSecondsRemaining / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((flashSecondsRemaining % 3600) / 60)).padStart(2, '0');
+        const secs = String(flashSecondsRemaining % 60).padStart(2, '0');
+        if (display) display.textContent = `${hrs}:${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const iconMap = {
+        success: '<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>',
+        info: '<i class="fa-solid fa-circle-info text-sky-400 text-base"></i>',
+        warning: '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-base"></i>'
+      };
+
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto bg-charcoal text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 text-xs sm:text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0';
+      toast.innerHTML = `
+        ${iconMap[type] || iconMap.success}
+        <span class="flex-1">${message}</span>
+      `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    /*************************************************************************
+     * 12. INITIALIZATION ON WINDOW LOAD
+     *************************************************************************/
+    window.onload = function () {
+      updateWishlistBadges();
+      updateEmailLogBadge();
+      renderCategoryPills();
+      renderDietaryPills();
+      renderProductGrid();
+      syncCartUI();
+      renderOrderTrackerView();
+      renderAdminDashboard();
+      startFlashCountdown();
+    };
+  </script>
+</body>
+</html>
