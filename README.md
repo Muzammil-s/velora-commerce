@@ -4,6 +4,11 @@
 
 ---
 
+## Live Demo
+
+- **Production URL:** [https://velora-commerce-xi.vercel.app/](https://velora-commerce-xi.vercel.app/)
+- **Mode:** Live interactive storefront deployed on Vercel.
+
 ## Application Preview
 
 ![Fresh Basket Pakistan Storefront](docs/screenshot.png)
