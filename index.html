@@ -1486,6 +1486,7 @@
         <button onclick="switchView('storefront')" class="hover:text-emerald-600 font-semibold">Storefront</button>
         <button onclick="switchView('tracker')" class="hover:text-emerald-600 font-semibold">Live Order Tracker</button>
         <button onclick="switchView('admin')" class="hover:text-emerald-600 font-semibold">Admin Dashboard</button>
+        <button onclick="resetFreshBasketDemo()" class="hover:text-rose-600 font-semibold">Reset Demo</button>
       </div>
     </div>
   </footer>
@@ -1500,6 +1501,54 @@
 
     function formatPKR(amount) {
       return 'Rs. ' + Math.round(Number(amount) || 0).toLocaleString('en-PK');
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    const STORAGE_KEY = 'freshbasket_pk_state_v1';
+    function persistAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          cart,
+          wishlist: Array.from(wishlist),
+          appliedPromo,
+          currentDeliveryLocation,
+          currentLocationEta,
+          orders,
+          selectedOrderId,
+          emailLogs,
+          products
+        }));
+      } catch (e) {}
+    }
+
+    function restoreAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (saved.cart && typeof saved.cart === 'object') cart = saved.cart;
+        if (Array.isArray(saved.wishlist)) wishlist = new Set(saved.wishlist);
+        if ('appliedPromo' in saved) appliedPromo = saved.appliedPromo;
+        if (saved.currentDeliveryLocation) currentDeliveryLocation = saved.currentDeliveryLocation;
+        if (saved.currentLocationEta) currentLocationEta = saved.currentLocationEta;
+        if (Array.isArray(saved.orders) && saved.orders.length) orders = saved.orders;
+        if (saved.selectedOrderId) selectedOrderId = saved.selectedOrderId;
+        if (Array.isArray(saved.emailLogs)) emailLogs = saved.emailLogs;
+        if (Array.isArray(saved.products) && saved.products.length) products = saved.products;
+      } catch (e) {}
+    }
+
+    function resetFreshBasketDemo() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      window.location.reload();
     }
 
     const CATEGORIES = [
@@ -2412,7 +2461,7 @@
                 <!-- Bottom-left Quick Nutrition Pill -->
                 <div class="absolute bottom-2.5 left-2.5 z-10 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-slate-200/60 text-[10px] font-bold text-slate-700 flex items-center gap-2">
                   <span>🔥 ${cal} kcal</span>
-                  <span class="text-emerald-700">💪 ${prot}g Protein</span>
+                  <span class="text-emerald-700">💪 ${prot}g</span>
                 </div>
 
                 <!-- Bottom-right Info / Recipe Trigger Hint -->
@@ -2771,6 +2820,7 @@
       });
       syncCartUI();
       renderProductGrid();
+      persistAppState();
       closeProductModal();
       showToast(`Added all ingredients for "${recipeTitle}" to your basket!`, 'success');
       toggleCartDrawer(true);
@@ -3106,9 +3156,9 @@
 
       document.getElementById('receiptOrderMeta').textContent = `Order #${order.id} • ${order.createdAt}`;
       document.getElementById('receiptCustomerInfo').innerHTML = `
-        <div><strong>Customer:</strong> ${order.customerName} (${order.phone})</div>
-        <div><strong>Address:</strong> ${order.address}</div>
-        <div><strong>Slot:</strong> ${order.slot}</div>
+        <div><strong>Customer:</strong> ${escapeHtml(order.customerName)} (${escapeHtml(order.phone)})</div>
+        <div><strong>Address:</strong> ${escapeHtml(order.address)}</div>
+        <div><strong>Slot:</strong> ${escapeHtml(order.slot)}</div>
         <div><strong>Payment:</strong> ${order.paymentMethod}</div>
       `;
       document.getElementById('receiptItemsTable').innerHTML = order.items.map(i => `
@@ -3533,7 +3583,7 @@
       toast.className = 'pointer-events-auto bg-charcoal text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 text-xs sm:text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0';
       toast.innerHTML = `
         ${iconMap[type] || iconMap.success}
-        <span class="flex-1">${message}</span>
+        <span class="flex-1">${escapeHtml(message)}</span>
       `;
 
       container.appendChild(toast);
@@ -3551,6 +3601,11 @@
      * 12. INITIALIZATION ON WINDOW LOAD
      *************************************************************************/
     window.onload = function () {
+      restoreAppState();
+      window.addEventListener('beforeunload', persistAppState);
+      document.getElementById('currentLocationLabel').textContent = currentDeliveryLocation;
+      document.getElementById('mobileLocationLabel').textContent = currentDeliveryLocation;
+      document.getElementById('navEtaBadge').textContent = '• ' + currentLocationEta;
       updateWishlistBadges();
       updateEmailLogBadge();
       renderCategoryPills();
